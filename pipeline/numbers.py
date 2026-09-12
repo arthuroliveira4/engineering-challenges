@@ -39,13 +39,24 @@ def looks_numeric(token: str) -> bool:
 
 
 def parse(token: str) -> float | None:
-    """A single figure, or None when the token cannot be read with confidence."""
+    """A single figure, or None when the token cannot be read with confidence.
+
+    A liasse prints a negative in parentheses, and the OCR usually keeps only
+    the closing one -- the opening bracket is absorbed into the label box to
+    its left. So 401009741 reports its financial result as "GV | 2 | 778)",
+    meaning -2 778, while 328024377 reports "GV | 18 | 831", meaning +18 831.
+    Dropping the bracket as punctuation flips the sign on every loss-making
+    line in the corpus, which the schema explicitly does not want: it asks for
+    values as printed, negative only where the filing shows a negative.
+    """
+    bracketed = token.rstrip().endswith(")") or (
+        token.lstrip().startswith("(") and ")" in token)
     cleaned = _STRIP.sub(" ", token.translate(_CONFUSED))
     cleaned = re.sub(r"\s+", " ", cleaned).strip().rstrip(".")
     if not cleaned:
         return None
 
-    negative = cleaned.startswith("-")
+    negative = cleaned.startswith("-") or bracketed
     cleaned = cleaned.lstrip("-").strip()
 
     if _DECIMAL.match(cleaned):

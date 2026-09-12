@@ -45,3 +45,26 @@ reading, and the box we would report would not span the digits we used.
 
 Such fields are omitted, per the schema's own rule that a field which cannot
 be established is left out rather than reported as zero.
+
+## Five filings have no compte de résultat, and that is lawful
+
+The seven P&L fields are absent from five of the fifteen filings. This is not
+an extraction failure. The registry metadata shipped with each document says
+so outright, and the correlation is exact:
+
+| filing | `confidentiality` | P&L present |
+|---|---|---|
+| 820561470, all three | Partiellement confidentiel | no |
+| 504304205 / 66cd893c | Partiellement confidentiel | no |
+| 401009741 / 68f0a715 | Partiellement confidentiel | no |
+| the other ten | Public | yes |
+
+Under article L. 232-25 of the Code de commerce a small company may declare
+that its income statement is not to be made public; the registry then
+publishes the balance sheet alone. So thirty-five of the values in scope are
+genuinely not in the documents, and the schema's rule applies: omit, never
+report zero.
+
+**What would overturn this:** a compte de résultat found in those filings
+under wording we did not search for. We checked for six of its mandatory
+lines and found at most one in each.
