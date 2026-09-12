@@ -24,11 +24,13 @@ python verify.py             # renders every value back onto its page, into veri
 `verify.py` is how I checked this, and the fastest way for you to: it crops the
 row each figure was read from, draws the submitted box on it, and captions it
 with the field and the value claimed. A box on the prior-year column, or on a
-subtotal one row up, is obvious on sight and invisible in a schema check. It
-earned its place — reading those sheets is what caught cost of goods sold
-silently dropping a line on three filings, because the accountant's software
-writes *"Variation de stock **de** marchandises"* where the liasse writes
-*"Variation de stock (marchandises)"*.
+subtotal one row up, is obvious on sight and invisible in a schema check.
+
+It earned its place. Reading all fifteen sheets found nine defects that the
+schema, the identities and I had all passed over — six wrong figures, four
+misplaced boxes and two figures dropped from pages that state them plainly.
+They are listed under *Accuracy* below, each with its cause. If you read one
+thing in this repository after `results.json`, read that table.
 
 No API key and no network. `.env.example` is empty on purpose and says why.
 
@@ -56,8 +58,8 @@ of my own, no API.
 | | measured |
 |---|---|
 | Cost | **€0.00 per page** — nothing is called |
-| Time | **0.0020 s per page**, 0.84 s for all 415 pages, one core |
-| Coverage | **116 of a possible 145 values** across 15 filings |
+| Time | **0.0026 s per page**, 1.1 s for all 415 pages, one core |
+| Coverage | **121 of a possible 145 values** across 15 filings |
 
 The 145 is not 12 × 15. Five filings withhold their income statement from
 publication by law, so 35 of the 180 nominal values do not exist to be read —
@@ -69,10 +71,10 @@ traces to a box on a page, and when a value is wrong I can see which rule
 produced it. A vision model would have covered more of the awkward layouts and
 told me less about why.
 
-**What it cost.** Roughly 29 values that a vision model would probably have
-picked up: pages where the wording runs into a neighbouring row, an annexe
-schedule that our page classifier does not recognise, one figure the OCR
-mangled beyond safe repair.
+**What it cost.** 24 values. Fewer than that are anyone's to win: 18 of them
+are figures the documents do not publish, and no amount of reading recovers
+what was never filed. Six are ones I would rather have had — see *What I cut*
+for each, by name.
 
 **What the alternative would have cost.** Zero is only half a trade-off, so
 here is the other side, derived rather than guessed — token counts against
@@ -89,20 +91,26 @@ What matters is not the per-page rate but how many pages you send:
 | | pages sent | Sonnet 5 | Opus 5 | Haiku 4.5 |
 |---|---|---|---|---|
 | vision over the whole corpus | 415 | €4.55 | €11.37 | €2.27 |
-| vision only where the rules failed | 11 | **€0.12** | €0.30 | €0.06 |
+| vision only where the rules failed | 8 | **€0.09** | €0.22 | €0.04 |
 | rules only (this submission) | 0 | €0.00 | €0.00 | €0.00 |
 
-Sending everything to a model costs 38× what sending the failures costs, for
-the same 13 recoverable values. The rules are what make the targeting
-possible: they do not merely extract, they say *which page they failed on*.
-Amortised over the corpus the targeted fallback is €0.0003 per page — three
+Those 8 are every gap sitting on a page the pipeline located, which is what a
+fallback queue would actually contain. At most 6 of them are values to win —
+two are cells this filing prints empty, where the model confirms an absence
+rather than recovering a figure. Worth knowing, not worth counting as
+coverage.
+
+Sending everything to a model costs 52× what sending the failures costs. The
+rules are what make that targeting possible: they do not merely extract, they
+say *which page they failed on*.
+Amortised over the corpus the targeted fallback is €0.0002 per page — two
 hundredths of a cent.
 
 So the honest reading of the trade-off is not "rules are free, models cost
-money". It is that **a rules-first pipeline turns a €4.55 problem into a €0.12
-problem**, and the €0.12 is worth spending.
+money". It is that **a rules-first pipeline turns a €4.55 problem into a €0.09
+problem**, and the €0.09 is worth spending.
 
-**What I could not measure.** How many of those 13 values a vision model would
+**What I could not measure.** How many of those 6 values a vision model would
 actually recover. That needs a real run against a real key, and I did not have
 one. The cost side above is derived from published prices and real token
 counts; the accuracy side is not, and I am not going to invent a number for
@@ -143,7 +151,31 @@ The `confidence` field records which route produced a value: 0.95 read from a
 CERFA line code, 0.90 built by summing printed lines, 0.80 matched by wording
 with a calibrated column, 0.55 matched by wording alone. Median is 0.90.
 
-## Four things the brief does not mention
+**Then I read all fifteen sheets.** Identities and the schema between them
+missed nine defects, because both are blind to the same thing: a figure that
+is well-formed, in range, and simply the wrong figure. Every one of these was
+found by looking at the box on the page.
+
+| what the sheet showed | what it was |
+|---|---|
+| cost of goods sold short by one line on three filings | the accountant's software writes *"Variation de stock **de** marchandises"* where the liasse writes *"(marchandises)"* |
+| income tax equal to operating profit | on a sideways sheet the wording sat at the *end* of a rebuilt row, so the first figure on it belonged to the account printed to the left |
+| personnel cost missing wages | OCR read *"Salaires et trait**ern**ents"* |
+| cash 68 856 too high | the box was on the gross column; with total assets withheld there was no anchor to calibrate against |
+| cost of goods sold mixing 2017 and 2016 | FV's own cell is empty that year, so "the nearest figure to the right of the code" reached into the prior-year column |
+| an income tax that was last year's | same cause, same company, one year later — HK empty |
+| two empty crops and two boxes in blank cells | every page of that filing carries /Rotate 270, and the boxes were normalised against the mediabox rather than the page as rendered |
+| depreciation absent though plainly printed | *"exceptionnelle"*, which disqualifies that label, was printed in the **other half** of a sideways sheet |
+| total equity absent on three filings | the section heading *"SITUATION NETTE"* outranked *"TOTAL situation nette :"*, which is the line with the figure on it |
+
+Six were figures reported wrongly, one was four boxes pointing at the wrong
+part of the page, and two were figures the page states plainly that the
+pipeline dropped. None would have surfaced any other way. That is the
+argument for `verify.py` being in this repository rather than in my scratch
+directory — and for reading the output rather than the summary of it, which
+is the habit I would take from this challenge.
+
+## Five things the brief does not mention
 
 These came out of the data and are worth reporting whether or not they were
 intended.
@@ -175,21 +207,62 @@ carry no compte de résultat. The registry metadata marks exactly those five
 its income statement not be made public. Those fields are omitted, per the
 schema's own rule.
 
+**5. Sideways text and a rotated page are two different problems, and one
+filing has the second.** Every page of `401009741`'s 2025 filing carries
+`/Rotate 270`: its mediabox is 841 × 595 while the page as rendered — and as
+the OCR measured it — is 595 × 841. Normalise a box against the mediabox and
+you divide x by the height and y by the width, which is silent, survives the
+schema, and puts every box on that filing somewhere else on the page.
+`tools/bbox_viewer.py` reads `page.rect`, so anyone following it is fine;
+anyone who reaches for `mediabox` because it sounds like the page is not.
+This is worth flagging because it is invisible in every check that does not
+render the result.
+
 Also worth knowing: `fiscal_year_end` does not need to be parsed out of the
 scan. The registry ships `dateCloture` in `data/<siren>/bilans/meta/`, and all
 fifteen are populated from it.
 
 ## What I cut, and why
 
-- **29 of 145 values.** The gaps by field: financial result 6/10, average
-  workforce 3/15, total equity 12/15, and one total assets deliberately
-  omitted. Each has a named cause, not a shrug.
+**24 of 145 values**, and every one of them has a cause I can name. Three
+quarters are not failures at all — they are figures the filing does not
+publish:
+
+| # | field(s) | filings | why |
+|---|---|---|---|
+| 7 | average workforce | 820561470 ×3, 401009741 ×3, 445070311/2025 | the word *effectif* appears nowhere in the document |
+| 1 | average workforce | 504304205/2018 | line YP is printed and its cell is empty |
+| 1 | average workforce | 504304205/2024 | line YP is printed as 0, and the schema says omit rather than report zero |
+| 1 | income tax | 504304205/2018 | line HK is printed and its cell is empty |
+| 1 | total assets | 445070311/2025 | the OCR dropped a leading digit; the check catches it and I will not report a figure whose box excludes digits I inferred |
+| 7 | the P&L fields | 328024377/2020 | see below |
+
+That leaves 6 I would rather have had:
+
+- **Share capital and cash on 328024377's 2020 filing.** Printed on a balance
+  sheet we located, and simply not read. That filing loses nine values in all,
+  but the other seven are its P&L, and they are counted above as absent for a
+  reason worth stating: it publishes **no statutory compte de résultat** — only
+  a management P&L from the accountant's report, with percent and variance
+  columns. The figures it does print are not the ones asked for: *Amortissements et
+  provisions* is one line where the liasse rules two (GA and GB), and its
+  revenue total includes operating subsidies, which *chiffres d'affaires nets*
+  does not. Reading definitions off a management report and filing them under
+  FRGAAP field keys is the sort of plausible-and-wrong the brief punishes
+  hardest.
+- **`PL_FINANCIAL_RESULTS` on 445070311's 2022 and 2023 filings.** The wording
+  is not on the page the classifier picked. The same field on the same
+  company's 2025 filing now reads correctly, so this is a page-selection gap
+  rather than a reading one.
+- **Average workforce on 445070311's 2022 and 2023 filings.** Both state it in
+  the director's report as *"l'effectif salarié moyen à la clôture de
+  l'exercice s'élève à 33"* — a phrase that is either an average or a closing
+  headcount depending on how you read it, from a document that is not the
+  annexe. I would rather omit an ambiguous figure than file it under a field
+  named *average*. This is the omission I am least sure about, and the cheapest
+  for you to overturn: two numbers, both stated in plain French.
 - **No vision-model fallback.** It is the obvious next move and I ran out of
   budget before it, not before deciding against it.
-- **`PL_FINANCIAL_RESULTS` on `445070311`.** The wording is glued to the end of
-  a neighbouring row by my row reconstruction, so the figures it finds belong
-  to another account. Reporting them would be exactly the failure the brief
-  says it punishes hardest, so the field is left out.
 - **No test suite.** The `checks.py` identities do the work a test suite would,
   but they run inside the pipeline rather than beside it.
 
