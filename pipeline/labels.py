@@ -71,3 +71,32 @@ def best_row(rows, label: Label):
     if not scored:
         return None
     return min(scored, key=lambda pair: pair[0])[1]
+
+
+TOTAL_EQUITY = Label(
+    patterns=(
+        r"total\s+(des\s+)?capitaux\s+propres",
+        r"^capitaux\s+propres\s+(\(|[ivx]+\b)",     # liasse prints "CAPITAUX PROPRES (I)"
+        r"situation\s+nette",
+    ),
+    forbidden=(r"autres\s+reserves", r"ecart", r"subvention", r"provision"),
+)
+
+SHARE_CAPITAL = Label(
+    patterns=(
+        r"capital\s+social\s+ou\s+individuel",
+        r"capital\s+social\b",
+        r"capital\s+souscrit\s+et\s+appele",
+    ),
+    forbidden=(r"non\s+appele", r"capital\s+souscrit\s+non"),
+)
+
+CASH = Label(
+    patterns=(r"^disponibilites\b", r"\bdisponibilites\b"),
+    forbidden=(r"total", r"et\s+divers"),
+)
+
+MARKETABLE_SECURITIES = Label(
+    patterns=(r"valeurs\s+mobilieres\s+de\s+placement",),
+    forbidden=(r"total",),
+)
