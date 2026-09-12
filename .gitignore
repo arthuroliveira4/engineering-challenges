@@ -12,3 +12,6 @@ venv/
 
 # saidas intermediarias
 *.png
+
+# saidas de verificacao (geradas por verify.py)
+verify/

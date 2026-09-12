@@ -140,12 +140,18 @@ INCOME_TAX = Label(
 # of notes-over-label_fr applied to BS_CAPITAL_EQUITY and PL_DEPRECIATION.
 PURCHASES_GOODS = Label(
     patterns=(r"achats?\s+de\s+marchandises",), forbidden=(r"total", r"variation"))
+# The liasse writes "Variation de stock (marchandises)"; the accountant's
+# software writes "Variation de stock DE marchandises". Missing the second
+# spelling silently understated cost of goods sold, and only looking at the
+# rendered page caught it.
 STOCK_GOODS = Label(
-    patterns=(r"variation\s+de\s+stocks?\s*\(?\s*\[?\s*marchandises",), forbidden=(r"total",))
+    patterns=(r"variation\s+de\s+stocks?\s*(?:de[s]?\s+)?[\(\[]?\s*marchandises",),
+    forbidden=(r"total",))
 PURCHASES_MATERIALS = Label(
     patterns=(r"achats?\s+de\s+mati[eè]res\s+premi",), forbidden=(r"total", r"variation"))
 STOCK_MATERIALS = Label(
-    patterns=(r"variation\s+de\s+stocks?\s*\(?\s*\[?\s*mati[eè]res",), forbidden=(r"total",))
+    patterns=(r"variation\s+de\s+stocks?\s*(?:de[s]?\s+)?[\(\[]?\s*mati[eè]res",),
+    forbidden=(r"total",))
 
 AVG_WORKFORCE = Label(
     patterns=(r"effectif\s+moyen\s+du\s+personnel", r"effectif\s+moyen"),

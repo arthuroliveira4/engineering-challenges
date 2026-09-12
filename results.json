@@ -693,16 +693,16 @@
         },
         {
           "field_key": "PL_COGS_FRGAAP",
-          "value": 1491570.0,
+          "value": 1488053.0,
           "unit": "EUR",
           "page": 16,
           "bbox": [
             0.7071,
             0.3916,
-            0.7745,
+            0.7753,
             0.4464
           ],
-          "snippet": "247 635 1 285 010 (41 075)",
+          "snippet": "247 635 (3 517) 1 285 010 (41 075)",
           "confidence": 0.5
         }
       ]
@@ -826,7 +826,7 @@
         },
         {
           "field_key": "PL_COGS_FRGAAP",
-          "value": 1926715.0,
+          "value": 1953566.0,
           "unit": "EUR",
           "page": 27,
           "bbox": [
@@ -835,7 +835,7 @@
             0.7791,
             0.441
           ],
-          "snippet": "348 255 1 858 354 (279 894)",
+          "snippet": "348 255 26 851 1 858 354 (279 894)",
           "confidence": 0.5
         }
       ]
@@ -931,16 +931,16 @@
         },
         {
           "field_key": "PL_COGS_FRGAAP",
-          "value": 2350734.0,
+          "value": 2291870.0,
           "unit": "EUR",
           "page": 11,
           "bbox": [
             0.3898,
-            0.6007,
+            0.5995,
             0.445,
             0.6346
           ],
-          "snippet": "424 104 1 968 969 (42 339)",
+          "snippet": "424 104 (58 864) 1 968 969 (42 339)",
           "confidence": 0.5
         }
       ]
@@ -1732,7 +1732,7 @@
   ],
   "run": {
     "cost_eur_per_page": 0.0,
-    "seconds_per_page": 0.0032,
+    "seconds_per_page": 0.0022,
     "pages_processed": 415,
     "model": "provided OCR + rules",
     "notes": "No model and no API. Every figure is read from the OCR shipped in data/, so the marginal cost of a page is zero; the only spend is the time above, measured end to end over 415 pages on one core, writing this file. Accuracy is not claimed against an answer key -- there is none -- but against identities the filings must satisfy: total assets equals total liabilities, and gross less depreciation equals net. Figures failing them are omitted rather than reported. Only the four balance-sheet fields are wired up; the seven P&L fields and average workforce are not yet implemented, and five filings withhold their income statement by law in any case. See README.md."

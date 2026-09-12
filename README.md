@@ -18,7 +18,17 @@ the repository's own, which described the challenge rather than the answer.
 pip install pymupdf pillow
 python run.py                # writes results.json at the repository root
 python run.py --report       # and prints coverage and caveats to stderr
+python verify.py             # renders every value back onto its page, into verify/
 ```
+
+`verify.py` is how I checked this, and the fastest way for you to: it crops the
+row each figure was read from, draws the submitted box on it, and captions it
+with the field and the value claimed. A box on the prior-year column, or on a
+subtotal one row up, is obvious on sight and invisible in a schema check. It
+earned its place — reading those sheets is what caught cost of goods sold
+silently dropping a line on three filings, because the accountant's software
+writes *"Variation de stock **de** marchandises"* where the liasse writes
+*"Variation de stock (marchandises)"*.
 
 No API key and no network. `.env.example` is empty on purpose and says why.
 
