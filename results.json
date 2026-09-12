@@ -608,6 +608,20 @@
           "confidence": 0.98
         },
         {
+          "field_key": "BS_TOTAL_EQUITY_FRGAAP",
+          "value": 4845839.0,
+          "unit": "EUR",
+          "page": 15,
+          "bbox": [
+            0.7244,
+            0.2905,
+            0.7926,
+            0.3007
+          ],
+          "snippet": "4 845 839",
+          "confidence": 0.8
+        },
+        {
           "field_key": "BS_CAPITAL_EQUITY_FRGAAP",
           "value": 300000.0,
           "unit": "EUR",
@@ -741,6 +755,20 @@
           "confidence": 0.98
         },
         {
+          "field_key": "BS_TOTAL_EQUITY_FRGAAP",
+          "value": 7076801.0,
+          "unit": "EUR",
+          "page": 25,
+          "bbox": [
+            0.7312,
+            0.2841,
+            0.7993,
+            0.2958
+          ],
+          "snippet": "7 076 801",
+          "confidence": 0.8
+        },
+        {
           "field_key": "BS_CAPITAL_EQUITY_FRGAAP",
           "value": 300000.0,
           "unit": "EUR",
@@ -859,6 +887,20 @@
       "siren": "445070311",
       "fiscal_year_end": "2023-06-30",
       "fields": [
+        {
+          "field_key": "BS_TOTAL_EQUITY_FRGAAP",
+          "value": 8275515.0,
+          "unit": "EUR",
+          "page": 9,
+          "bbox": [
+            0.2967,
+            0.1212,
+            0.3112,
+            0.1552
+          ],
+          "snippet": "8 275 515",
+          "confidence": 0.55
+        },
         {
           "field_key": "BS_CAPITAL_EQUITY_FRGAAP",
           "value": 300000.0,
@@ -1760,9 +1802,9 @@
   ],
   "run": {
     "cost_eur_per_page": 0.0,
-    "seconds_per_page": 0.0027,
+    "seconds_per_page": 0.0026,
     "pages_processed": 415,
     "model": "provided OCR + rules",
-    "notes": "No model and no API. Every figure is read from the OCR shipped in data/, so the marginal cost of a page is zero; the only spend is the time above, measured end to end over 415 pages on one core, writing this file. Accuracy is not claimed against an answer key -- there is none -- but against identities the filings must satisfy: total assets equals total liabilities, and gross less depreciation equals net. Figures failing them are omitted rather than reported. All twelve fields are implemented; 118 of a possible 145 values are reported. The possible count is not twelve times fifteen: 35 values do not exist to be read, because five filings withhold their income statement from publication under article L. 232-25 of the Code de commerce. The remaining gaps have named causes in README.md, which also gives the cost of the alternative."
+    "notes": "No model and no API. Every figure is read from the OCR shipped in data/, so the marginal cost of a page is zero; the only spend is the time above, measured end to end over 415 pages on one core, writing this file. Accuracy is not claimed against an answer key -- there is none -- but against identities the filings must satisfy: total assets equals total liabilities, and gross less depreciation equals net. Figures failing them are omitted rather than reported. All twelve fields are implemented; 121 of a possible 145 values are reported. The possible count is not twelve times fifteen: 35 values do not exist to be read, because five filings withhold their income statement from publication under article L. 232-25 of the Code de commerce. The remaining gaps have named causes in README.md, which also gives the cost of the alternative."
   }
 }

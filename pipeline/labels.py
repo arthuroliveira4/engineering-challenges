@@ -108,15 +108,29 @@ def _best_wording(row, label: Label) -> tuple[int, int] | None:
 
 
 def best_row(rows, label: Label):
-    """The highest-ranked row matching `label`, or None."""
+    """The highest-ranked row matching `label`, or None.
+
+    Equal ranks are settled in favour of a row that actually prints figures.
+    A section heading is worded like the total that closes it -- 445070311
+    heads its equity block "SITUATION NETTE" and ends it "TOTAL situation
+    nette : 4 845 839" -- and both match equally well, so the heading won on
+    page order and the field came back empty three times over.
+
+    Figureless rows stay eligible rather than being filtered out, because one
+    reading depends on them: a headcount stated in prose arrives as a single
+    box, "Effectif moyen du personnel 43 personnes", with no numeric cell of
+    its own for caller and label alike to find.
+    """
+    from pipeline.numbers import figures_in
+
     scored = []
-    for row in rows:
+    for order, row in enumerate(rows):
         hit = _best_wording(row, label)
         if hit:
-            scored.append((hit[0], row))
+            scored.append((hit[0], 0 if figures_in(row) else 1, order, row))
     if not scored:
         return None
-    return min(scored, key=lambda pair: pair[0])[1]
+    return min(scored, key=lambda found: found[:3])[3]
 
 
 TOTAL_EQUITY = Label(
