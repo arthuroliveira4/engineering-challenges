@@ -35,6 +35,15 @@ from pipeline.pages import (ACTIF, PASSIF, RESULTAT, RESULTAT_SUITE,
                             WORKFORCE, classify_document)
 from pipeline.scope import SCOPE, paths
 
+SCHEMA = "challenges/bilan/schema/financial_fields.json"
+
+# Their field list, not ours, so the denominator in the run notes cannot drift
+# away from what was actually asked for. The seven PL_ fields are the ones a
+# withheld income statement takes with it.
+with open(SCHEMA, encoding="utf-8") as _fh:
+    FIELD_KEYS = [f["field_key"] for f in json.load(_fh)["fields"]]
+PL_FIELD_KEYS = [k for k in FIELD_KEYS if k.startswith("PL_")]
+
 # Bilan. Total assets is read first: it anchors the current-year column for
 # everything else on the two pages.
 BALANCE_SHEET = [
@@ -373,6 +382,12 @@ def main() -> int:
 
     elapsed = time.perf_counter() - started
 
+    reported = sum(len(d["fields"]) for d in documents)
+    withheld = sum(
+        len(PL_FIELD_KEYS) for note in all_notes if "withheld from publication" in note
+    )
+    possible = len(SCOPE) * len(FIELD_KEYS) - withheld
+
     payload = {
         "documents": documents,
         "run": {
@@ -388,10 +403,13 @@ def main() -> int:
                 "there is none -- but against identities the filings must satisfy: "
                 "total assets equals total liabilities, and gross less depreciation "
                 "equals net. Figures failing them are omitted rather than reported. "
-                "Only the four balance-sheet fields are wired up; the seven P&L "
-                "fields and average workforce are not yet implemented, and five "
-                "filings withhold their income statement by law in any case. "
-                "See README.md."
+                f"All twelve fields are implemented; {reported} of a possible "
+                f"{possible} values are reported. The possible count is not twelve "
+                f"times fifteen: {withheld} values do not exist to be read, because "
+                "five filings withhold their income statement from publication under "
+                "article L. 232-25 of the Code de commerce. The remaining gaps have "
+                "named causes in README.md, which also gives the cost of the "
+                "alternative."
             ),
         },
     }
