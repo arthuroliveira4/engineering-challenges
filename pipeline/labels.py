@@ -61,13 +61,59 @@ TOTAL_LIABILITIES = Label(
 )
 
 
+def wordings_on(row) -> list[tuple[int, str]]:
+    """The stretches of wording on a row, cut where figures interrupt them.
+
+    A row is not always one account. A sideways filing prints two columns of
+    the statement side by side, and rebuilding the page glues them together:
+
+        Dotations aux amortissements sur immobilisations 275 843 267 890
+        CHARGES EXCEPTIONNELLES 115 6 720
+
+    arrives as a single row. Ranking that text whole let "exceptionnelle" --
+    a word disqualifying a *different* account, printed in the other half of
+    the sheet -- throw away 445070311's depreciation, which the page states
+    plainly.
+
+    Figures are where one account's wording ends and the next one's begins, so
+    each stretch is judged on its own. Splitting there rather than on cell
+    boundaries matters: the OCR breaks wording across cells as it pleases, and
+    a prefix test would accept "Dotations aux amortissements" while the
+    "exceptionnelles" that disqualifies it sat in the next cell along.
+
+    Each stretch is returned with the index of its last cell, so a caller can
+    take the figures that follow the wording it actually matched.
+    """
+    from pipeline.numbers import looks_numeric
+
+    runs: list[tuple[int, str]] = []
+    current: list[str] = []
+    for index, cell in enumerate(row.cells):
+        if looks_numeric(cell.text):
+            if current:
+                runs.append((index - 1, " ".join(current)))
+                current = []
+        else:
+            current.append(cell.text)
+    if current:
+        runs.append((len(row.cells) - 1, " ".join(current)))
+    return runs or [(len(row.cells) - 1, row.text)]
+
+
+def _best_wording(row, label: Label) -> tuple[int, int] | None:
+    """(rank, index of the wording's last cell) for the best stretch, or None."""
+    scored = [(rank, end) for end, text in wordings_on(row)
+              if (rank := label.rank(text)) is not None]
+    return min(scored) if scored else None
+
+
 def best_row(rows, label: Label):
     """The highest-ranked row matching `label`, or None."""
     scored = []
     for row in rows:
-        rank = label.rank(row.text)
-        if rank is not None:
-            scored.append((rank, row))
+        hit = _best_wording(row, label)
+        if hit:
+            scored.append((hit[0], row))
     if not scored:
         return None
     return min(scored, key=lambda pair: pair[0])[1]
@@ -174,10 +220,15 @@ def label_ends_at(row, label: Label) -> int | None:
     the row belong to something else entirely. Reading left to right, a figure
     belongs to the label printed to its left -- so callers take only what
     follows this index, and 2 157 428 stops being reported as income tax.
+
+    It reads the same stretches best_row ranks. Walking cumulative prefixes
+    instead used to disagree with it: on the row
+
+        TOTAL charges externes 3 251 348 2 881 753 RESULTAT FINANCIER 380 965
+
+    every prefix reaching the wording also carried "TOTAL", which the
+    financial result forbids, so no index came back -- and callers read a
+    missing index as "no need to filter" and reported 3 251 348.
     """
-    text = ""
-    for index, cell in enumerate(row.cells):
-        text = f"{text} {cell.text}".strip()
-        if label.rank(text) is not None:
-            return index
-    return None
+    hit = _best_wording(row, label)
+    return hit[1] if hit else None

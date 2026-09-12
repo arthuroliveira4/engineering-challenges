@@ -902,6 +902,34 @@
           "confidence": 0.8
         },
         {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 275843.0,
+          "unit": "EUR",
+          "page": 11,
+          "bbox": [
+            0.5667,
+            0.6007,
+            0.582,
+            0.6289
+          ],
+          "snippet": "275 843",
+          "confidence": 0.8
+        },
+        {
+          "field_key": "PL_FINANCIAL_RESULTS_FRGAAP",
+          "value": 380965.0,
+          "unit": "EUR",
+          "page": 11,
+          "bbox": [
+            0.4555,
+            0.1286,
+            0.4724,
+            0.1577
+          ],
+          "snippet": "380 965",
+          "confidence": 0.55
+        },
+        {
           "field_key": "PL_INCOME_TAX_FRGAAP",
           "value": 539793.0,
           "unit": "EUR",
@@ -1718,9 +1746,9 @@
   ],
   "run": {
     "cost_eur_per_page": 0.0,
-    "seconds_per_page": 0.0023,
+    "seconds_per_page": 0.0028,
     "pages_processed": 415,
     "model": "provided OCR + rules",
-    "notes": "No model and no API. Every figure is read from the OCR shipped in data/, so the marginal cost of a page is zero; the only spend is the time above, measured end to end over 415 pages on one core, writing this file. Accuracy is not claimed against an answer key -- there is none -- but against identities the filings must satisfy: total assets equals total liabilities, and gross less depreciation equals net. Figures failing them are omitted rather than reported. All twelve fields are implemented; 115 of a possible 145 values are reported. The possible count is not twelve times fifteen: 35 values do not exist to be read, because five filings withhold their income statement from publication under article L. 232-25 of the Code de commerce. The remaining gaps have named causes in README.md, which also gives the cost of the alternative."
+    "notes": "No model and no API. Every figure is read from the OCR shipped in data/, so the marginal cost of a page is zero; the only spend is the time above, measured end to end over 415 pages on one core, writing this file. Accuracy is not claimed against an answer key -- there is none -- but against identities the filings must satisfy: total assets equals total liabilities, and gross less depreciation equals net. Figures failing them are omitted rather than reported. All twelve fields are implemented; 117 of a possible 145 values are reported. The possible count is not twelve times fifteen: 35 values do not exist to be read, because five filings withhold their income statement from publication under article L. 232-25 of the Code de commerce. The remaining gaps have named causes in README.md, which also gives the cost of the alternative."
   }
 }
