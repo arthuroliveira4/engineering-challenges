@@ -23,9 +23,19 @@ POINTS_PER_INCH = 72
 
 @functools.lru_cache(maxsize=64)
 def page_size_px(pdf_path: str, page: int) -> tuple[float, float]:
-    """Page width and height in 300-dpi pixels, 1-indexed."""
+    """Page width and height in 300-dpi pixels, 1-indexed.
+
+    `rect`, not `mediabox`: the two differ on a page carrying /Rotate, and
+    every page of 401009741's 2025 filing carries /Rotate 270. Its mediabox is
+    841 x 595 while the page as rendered -- and as the OCR measured it, up to
+    (2416, 3479) -- is 595 x 841. Normalising by the mediabox divided x by the
+    height and y by the width, which put every box on that filing somewhere
+    else on the page, two of them clamped flat against the bottom edge.
+    tools/bbox_viewer.py reads page.rect for the same reason, so this also
+    keeps our boxes checkable against theirs.
+    """
     with pymupdf.open(pdf_path) as doc:
-        rect = doc[page - 1].mediabox
+        rect = doc[page - 1].rect
     scale = DPI_OF_OCR / POINTS_PER_INCH
     return rect.width * scale, rect.height * scale
 
