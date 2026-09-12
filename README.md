@@ -64,13 +64,46 @@ picked up: pages where the wording runs into a neighbouring row, an annexe
 schedule that our page classifier does not recognise, one figure the OCR
 mangled beyond safe repair.
 
-**What I would do with a week.** Keep the rules as the primary path — they are
-free, fast and explainable — and add a vision-model fallback that fires only
-on the fields the rules miss, which is about 20% of them. Cost would then be a
-few cents per filing rather than per page, and I could report it as measured
-spend rather than zero. I would also run the `checks.py` identities as a test
-suite over every filing rather than as a gate inside the run, so a regression
-shows up as a failing test rather than as a quietly missing field.
+**What the alternative would have cost.** Zero is only half a trade-off, so
+here is the other side, derived rather than guessed — token counts against
+published prices, which the schema names as an acceptable derivation.
+
+An A4 page renders to 1098 × 1568 px after the API's downscale, which is 2 296
+image tokens; a prompt carrying the twelve French labels and the output schema
+is about 700 more; the response is 590 tokens, measured from the size of a
+complete document entry in this file's own output. At Claude Sonnet 5 rates
+($2.00 / $10.00 per MTok) that is **€0.011 per page**.
+
+What matters is not the per-page rate but how many pages you send:
+
+| | pages sent | Sonnet 5 | Opus 5 | Haiku 4.5 |
+|---|---|---|---|---|
+| vision over the whole corpus | 415 | €4.55 | €11.37 | €2.27 |
+| vision only where the rules failed | 11 | **€0.12** | €0.30 | €0.06 |
+| rules only (this submission) | 0 | €0.00 | €0.00 | €0.00 |
+
+Sending everything to a model costs 38× what sending the failures costs, for
+the same 13 recoverable values. The rules are what make the targeting
+possible: they do not merely extract, they say *which page they failed on*.
+Amortised over the corpus the targeted fallback is €0.0003 per page — three
+hundredths of a cent.
+
+So the honest reading of the trade-off is not "rules are free, models cost
+money". It is that **a rules-first pipeline turns a €4.55 problem into a €0.12
+problem**, and the €0.12 is worth spending.
+
+**What I could not measure.** How many of those 13 values a vision model would
+actually recover. That needs a real run against a real key, and I did not have
+one. The cost side above is derived from published prices and real token
+counts; the accuracy side is not, and I am not going to invent a number for
+the half I could not test. That is the biggest gap in this submission.
+
+**What I would do with a week.** Build that fallback and measure it, which
+closes the gap above. The plumbing is already there: `run.py` records which
+page each missing field was expected on, so the fallback has its work queue
+without any new analysis. I would also promote the `checks.py` identities from
+a gate inside the run to a test suite beside it, so a regression surfaces as a
+failing test rather than as a quietly absent field.
 
 ## Accuracy, without an answer key
 
