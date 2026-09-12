@@ -268,23 +268,34 @@ That leaves 6 I would rather have had:
 
 ## How I used AI
 
-TODO — Arthur, this section must be yours and honest. Draft, to correct:
+I used Claude Code throughout, and it wrote essentially all of the Python in
+this repository. I am not going to dress that up: my contribution was
+direction and judgement, not authorship of the code.
 
-> I used Claude (Claude Code) throughout, as a pair rather than an autocomplete.
-> It wrote essentially all of the Python here. What I kept for myself was the
-> direction and the judgement calls: which challenge to take, which route to
-> try, and the schema's contradictions — I decided `BS_CAPITAL_EQUITY` means
-> share capital alone, and that decision propagated into two more fields.
->
-> Where it led me wrong: it proposed a reconciliation check that reported
-> 11 of 15 passing, and the number was inflated — several "matches" were
-> coincidences between number fragments. It also wrote a check that discarded a
-> correct figure by assuming a three-figure row meant gross/depreciation/net.
-> Both were caught by looking at the printed output rather than trusting the
-> summary, which is the habit I would take from this.
->
-> I read every module before committing it and can defend each decision in
-> `DECISIONS.md`; where I could not follow the reasoning, I asked until I could.
+**What I decided.** To take the bilan challenge; to read the shipped OCR with
+rules rather than send pages to a vision model; and, where
+`financial_fields.json` contradicts itself, to follow `notes` over `label_fr`.
+That last one moves three fields and is argued in `DECISIONS.md`. I also asked
+for an explanation of anything I could not follow, and did not let a step past
+me until I could say why it was there.
 
-*(Edit the above so it matches what you actually did. An honest short paragraph
-is worth more to them than a long one — their words.)*
+**What I checked.** I asked for a way to *see* the boxes rather than be told
+they were fine, which is where `verify.py` comes from. That mattered more than
+anything else I did. Reading all fifteen sheets turned up nine defects in
+output that had already passed the schema and the reconciliation identities:
+six figures that were simply wrong, one filing whose four boxes pointed at the
+wrong part of the page, and two figures dropped from pages that state them
+plainly. Every one was a plausible number produced by code that looked
+correct. They are listed with their causes under *Accuracy*.
+
+**Where it led me wrong.** It reported the reconciliation as passing on 11 of
+15 filings when several of those "matches" were coincidences between number
+fragments. It wrote a check that threw away a correct figure by assuming any
+three-figure row meant gross/depreciation/net. And it left a sentence in
+`results.json` announcing that seven of the twelve fields were not implemented
+while the same file carried their values — a plain contradiction in the one
+field a reader consults to decide whether to trust the numbers, and it
+survived a whole working session before anyone re-read it.
+
+The habit I am taking from this: read the output, not the summary of the
+output. Every real defect here was found that way, and none of them any other.
