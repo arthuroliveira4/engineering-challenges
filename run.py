@@ -20,7 +20,7 @@ from dataclasses import dataclass
 
 from pipeline import checks, units
 from pipeline.fields import Field, Reading, calibration, read
-from pipeline.columns import calibrate_by_identity
+from pipeline.columns import Column, calibrate_by_identity
 from pipeline.geometry import normalise_box
 from pipeline.labels import (AVG_WORKFORCE, CASH, DEPRECIATION,
                              EXTERNAL_SERVICES, FINANCIAL_RESULT, INCOME_TAX,
@@ -220,14 +220,14 @@ def process(siren: str, stem: str) -> DocumentResult:
     return DocumentResult(entry, notes)
 
 
-def _sum_parts(parts_fields, rows, page, key, unit, pdf, penalty=0.05):
+def _sum_parts(parts_fields, rows, page, key, unit, pdf, penalty=0.05, column=None):
     """A field built by adding printed lines, or None when none of them are there.
 
     The box spans every line used, because that is where the value came from;
     reporting only the first would point at a figure that is not the one we
     are claiming.
     """
-    parts = [read(f, rows, page, None) for f in parts_fields]
+    parts = [read(f, rows, page, column) for f in parts_fields]
     parts = [r for r in parts if r]
     if not parts:
         return None
@@ -241,21 +241,23 @@ def _sum_parts(parts_fields, rows, page, key, unit, pdf, penalty=0.05):
     return emit(built, key, unit, pdf)
 
 
-def revenue(rows, page: int, unit: str, pdf: str):
+def revenue(rows, page: int) -> Reading | None:
     """Net revenue: the total, not the domestic column beside it.
 
     The form splits revenue into France and export and then totals it, so the
     figure we want is the third on the row, not the first. Where the code FL
     is printed we take it; otherwise we take the first figure that the other
     two add up to, which checks the reading as it makes it.
+
+    Returned rather than emitted, because where it sits horizontally is what
+    calibrates the rest of the income statement.
     """
     from pipeline import liasse
 
     hit = liasse.find(rows, "FL")
     if hit:
         value, cells = hit
-        return emit(Reading(value, cells, page, "code FL", 0.95),
-                    "PL_REVENUE_FRGAAP", unit, pdf)
+        return Reading(value, cells, page, "code FL", 0.95)
 
     row = best_row(rows, REVENUE)
     if not row:
@@ -264,13 +266,11 @@ def revenue(rows, page: int, unit: str, pdf: str):
     for i in range(len(figures) - 2):
         france, export, total = figures[i][0], figures[i + 1][0], figures[i + 2][0]
         if abs(france + export - total) <= checks.TOLERANCE:
-            return emit(Reading(total, figures[i + 2][1], page,
-                                "label; France + export reconciles", 0.90),
-                        "PL_REVENUE_FRGAAP", unit, pdf)
+            return Reading(total, figures[i + 2][1], page,
+                           "label; France + export reconciles", 0.90)
     if figures:
-        return emit(Reading(figures[0][0], figures[0][1], page,
-                            "label only; no France/export split to check against", 0.55),
-                    "PL_REVENUE_FRGAAP", unit, pdf)
+        return Reading(figures[0][0], figures[0][1], page,
+                       "label only; no France/export split to check against", 0.55)
     return None
 
 
@@ -293,19 +293,36 @@ def income_statement(p: dict, statements: dict, unit: str, notes: list[str]) -> 
 
     main = rows_of_page[page_of[RESULTAT]]
 
-    got = revenue(main, page_of[RESULTAT], unit, p["pdf"])
-    if got:
-        out.append(got)
+    # The bilan calibrates on total assets; the compte de rÃ©sultat has no
+    # equivalent identity across pages, but net revenue is proved on its own
+    # row -- France plus export totals it -- and sits in the current-year
+    # column by construction. Every other line on the statement is then read
+    # from that band, which is what stops a blank cell being answered with
+    # last year's figure from the column beside it.
+    rev = revenue(main, page_of[RESULTAT])
+    column = None
+    if rev:
+        out.append(emit(rev, "PL_REVENUE_FRGAAP", unit, p["pdf"]))
+        x0, _, x1, _ = rev.bbox_px
+        column = Column(x0, x1)
 
+    # The band carries to the second half of the form as well. Both halves are
+    # the same CERFA sheet and rule their columns at the same offsets, and the
+    # one figure this drops is one that should never have been there:
+    # 504304205 pays no tax it declares in 2018, prints HK empty, and the
+    # nearest figure was 2017's 1 146 from the column beside it. Should a
+    # filing ever break the alignment, income tax goes missing rather than
+    # wrong, which is the direction the brief asks us to fail in.
     for field, statement in INCOME_STATEMENT:
         page = page_of[statement]
-        reading = read(field, rows_of_page[page], page, None)
+        reading = read(field, rows_of_page[page], page, column)
         if reading:
             out.append(emit(reading, field.key, unit, p["pdf"]))
 
     for parts, key in ((PERSONNEL_PARTS, "PL_PERSONNEL_COSTS_FRGAAP"),
                        (COGS_PARTS, "PL_COGS_FRGAAP")):
-        built = _sum_parts(parts, main, page_of[RESULTAT], key, unit, p["pdf"])
+        built = _sum_parts(parts, main, page_of[RESULTAT], key, unit, p["pdf"],
+                           column=column)
         if built:
             out.append(built)
         elif key == "PL_COGS_FRGAAP":

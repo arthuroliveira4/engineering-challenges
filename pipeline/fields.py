@@ -57,10 +57,15 @@ def read(field: Field, rows, page: int, column: Column | None) -> Reading | None
     fields done well to twelve with three quietly wrong.
     """
     if field.code:
-        hit = liasse.find(rows, field.code)
+        hit = liasse.find(rows, field.code, column)
         if hit:
             value, cells = hit
             return Reading(value, cells, page, f"code {field.code}", 0.95)
+        # The code was printed and its current-year cell was empty. Falling
+        # through to the wording would read the same blank row by a weaker
+        # route and land on the same neighbouring column, so stop here.
+        if column is not None and liasse.find(rows, field.code) is not None:
+            return None
 
     if field.label:
         row = best_row(rows, field.label)

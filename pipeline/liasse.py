@@ -46,11 +46,20 @@ def codes_on(row) -> dict[str, float]:
     return found
 
 
-def find(rows, code: str):
+def find(rows, code: str, column=None):
     """(value, cells) for `code` anywhere on the page, or None.
 
     Returns the cells as well: provenance is the point, and the box we report
     has to be the figure's, not the code's.
+
+    "Nearest figure to the right" is only the current exercise while that cell
+    is filled. A blank one prints nothing, so the nearest figure becomes last
+    year's, a column over, and the wrong year is reported under the right code
+    with nothing to show for it. 504304205 files no change in raw-materials
+    inventory in 2017 and prints FV empty; cost of goods sold came out as
+    152 338 - 5 450, the 5 450 being the 2016 figure. Pass `column` -- the
+    band a proved figure sits in -- and a code whose own cell is empty reads
+    as absent, which is what it is.
     """
     from pipeline.numbers import figures_in
 
@@ -66,8 +75,12 @@ def find(rows, code: str):
                 continue
             to_the_right = [(v, cells) for v, cells in figures_in(row)
                             if cells[0].x0 >= cell.x1]
-            if to_the_right:
+            if not to_the_right:
+                continue
+            if column is None:
                 return min(to_the_right, key=lambda pair: pair[1][0].x0 - cell.x1)
+            inside = [pair for pair in to_the_right if column.contains(pair[1])]
+            return min(inside, key=lambda pair: pair[1][0].x0 - cell.x1) if inside else None
     return None
 
 

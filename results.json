@@ -311,7 +311,7 @@
             0.438
           ],
           "snippet": "1 339 065",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
@@ -381,7 +381,7 @@
             0.378
           ],
           "snippet": "956 557 87 582",
-          "confidence": 0.5
+          "confidence": 0.75
         },
         {
           "field_key": "META_AVG_WORKFORCE_FRGAAP",
@@ -542,7 +542,7 @@
             0.4968
           ],
           "snippet": "1 688 833 523 675",
-          "confidence": 0.5
+          "confidence": 0.75
         },
         {
           "field_key": "PL_COGS_FRGAAP",
@@ -647,7 +647,7 @@
             0.4592
           ],
           "snippet": "884 031",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
@@ -661,7 +661,7 @@
             0.59
           ],
           "snippet": "236 796",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_INCOME_TAX_FRGAAP",
@@ -675,7 +675,7 @@
             0.718
           ],
           "snippet": "302 337",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
@@ -689,7 +689,7 @@
             0.5441
           ],
           "snippet": "1 044 010 303 152",
-          "confidence": 0.5
+          "confidence": 0.75
         },
         {
           "field_key": "PL_COGS_FRGAAP",
@@ -703,7 +703,7 @@
             0.4464
           ],
           "snippet": "247 635 (3 517) 1 285 010 (41 075)",
-          "confidence": 0.5
+          "confidence": 0.75
         }
       ]
     },
@@ -780,7 +780,7 @@
             0.4541
           ],
           "snippet": "928 188",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
@@ -794,7 +794,7 @@
             0.585
           ],
           "snippet": "267 890",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_INCOME_TAX_FRGAAP",
@@ -808,7 +808,7 @@
             0.7119
           ],
           "snippet": "621 467",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
@@ -822,7 +822,7 @@
             0.5391
           ],
           "snippet": "1 461 931 481 360",
-          "confidence": 0.5
+          "confidence": 0.75
         },
         {
           "field_key": "PL_COGS_FRGAAP",
@@ -836,7 +836,7 @@
             0.441
           ],
           "snippet": "348 255 26 851 1 858 354 (279 894)",
-          "confidence": 0.5
+          "confidence": 0.75
         }
       ]
     },
@@ -899,7 +899,7 @@
             0.6295
           ],
           "snippet": "959 477",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_INCOME_TAX_FRGAAP",
@@ -927,7 +927,7 @@
             0.6352
           ],
           "snippet": "1 578 395 435 912",
-          "confidence": 0.5
+          "confidence": 0.75
         },
         {
           "field_key": "PL_COGS_FRGAAP",
@@ -941,7 +941,7 @@
             0.6346
           ],
           "snippet": "424 104 (58 864) 1 968 969 (42 339)",
-          "confidence": 0.5
+          "confidence": 0.75
         }
       ]
     },
@@ -1092,16 +1092,16 @@
         },
         {
           "field_key": "PL_COGS_FRGAAP",
-          "value": 146888.0,
+          "value": 152338.0,
           "unit": "EUR",
           "page": 6,
           "bbox": [
             0.7228,
             0.36,
-            0.9572,
-            0.3966
+            0.7991,
+            0.3749
           ],
-          "snippet": "152 338 (5 450)",
+          "snippet": "152 338",
           "confidence": 0.9
         },
         {
@@ -1235,20 +1235,6 @@
             0.9517
           ],
           "snippet": "(13 520)",
-          "confidence": 0.95
-        },
-        {
-          "field_key": "PL_INCOME_TAX_FRGAAP",
-          "value": 1146.0,
-          "unit": "EUR",
-          "page": 7,
-          "bbox": [
-            0.8938,
-            0.3405,
-            0.9491,
-            0.353
-          ],
-          "snippet": "1 146",
           "confidence": 0.95
         },
         {
@@ -1431,7 +1417,7 @@
             0.4477
           ],
           "snippet": "297 253",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
@@ -1445,7 +1431,7 @@
             0.5273
           ],
           "snippet": "38 537",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_FINANCIAL_RESULTS_FRGAAP",
@@ -1487,7 +1473,7 @@
             0.5074
           ],
           "snippet": "444 500 149 255",
-          "confidence": 0.5
+          "confidence": 0.75
         },
         {
           "field_key": "PL_COGS_FRGAAP",
@@ -1501,7 +1487,7 @@
             0.4278
           ],
           "snippet": "194 094 227) 321 507 81 224",
-          "confidence": 0.5
+          "confidence": 0.75
         }
       ]
     },
@@ -1592,7 +1578,7 @@
             0.4468
           ],
           "snippet": "329 158",
-          "confidence": 0.55
+          "confidence": 0.8
         },
         {
           "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
@@ -1662,7 +1648,7 @@
             0.428
           ],
           "snippet": "138 591 45 440) 490 756 52 814)",
-          "confidence": 0.5
+          "confidence": 0.75
         }
       ]
     },
@@ -1732,9 +1718,9 @@
   ],
   "run": {
     "cost_eur_per_page": 0.0,
-    "seconds_per_page": 0.0021,
+    "seconds_per_page": 0.0023,
     "pages_processed": 415,
     "model": "provided OCR + rules",
-    "notes": "No model and no API. Every figure is read from the OCR shipped in data/, so the marginal cost of a page is zero; the only spend is the time above, measured end to end over 415 pages on one core, writing this file. Accuracy is not claimed against an answer key -- there is none -- but against identities the filings must satisfy: total assets equals total liabilities, and gross less depreciation equals net. Figures failing them are omitted rather than reported. All twelve fields are implemented; 116 of a possible 145 values are reported. The possible count is not twelve times fifteen: 35 values do not exist to be read, because five filings withhold their income statement from publication under article L. 232-25 of the Code de commerce. The remaining gaps have named causes in README.md, which also gives the cost of the alternative."
+    "notes": "No model and no API. Every figure is read from the OCR shipped in data/, so the marginal cost of a page is zero; the only spend is the time above, measured end to end over 415 pages on one core, writing this file. Accuracy is not claimed against an answer key -- there is none -- but against identities the filings must satisfy: total assets equals total liabilities, and gross less depreciation equals net. Figures failing them are omitted rather than reported. All twelve fields are implemented; 115 of a possible 145 values are reported. The possible count is not twelve times fifteen: 35 values do not exist to be read, because five filings withhold their income statement from publication under article L. 232-25 of the Code de commerce. The remaining gaps have named causes in README.md, which also gives the cost of the alternative."
   }
 }
