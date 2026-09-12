@@ -211,6 +211,15 @@ def process(siren: str, stem: str) -> DocumentResult:
 
     entry["fields"].extend(income_statement(p, statements, unit, notes))
 
+    # Headcount is a META_ field printed in the annexe, not a line of the
+    # compte de resultat, and reading it from inside income_statement tied it
+    # to one: 328024377's 2020 filing publishes no statutory P&L, so the
+    # early return took its "Effectif moyen du personnel 43 personnes" with
+    # it. Nothing about a withheld income statement withholds the headcount.
+    got = workforce(p, statements, p["pdf"])
+    if got:
+        entry["fields"].append(got)
+
     notes.extend(checks.coherence(entry["fields"]))
 
     if meta.get("confidentiality") == "Partiellement confidentiel":
@@ -327,10 +336,6 @@ def income_statement(p: dict, statements: dict, unit: str, notes: list[str]) -> 
             out.append(built)
         elif key == "PL_COGS_FRGAAP":
             notes.append("cost of goods sold: none of its component lines found")
-
-    got = workforce(p, statements, p["pdf"])
-    if got:
-        out.append(got)
 
     return out
 
