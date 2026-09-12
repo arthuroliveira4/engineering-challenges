@@ -100,3 +100,54 @@ MARKETABLE_SECURITIES = Label(
     patterns=(r"valeurs\s+mobilieres\s+de\s+placement",),
     forbidden=(r"total",),
 )
+
+
+# --- compte de resultat -------------------------------------------------
+
+REVENUE = Label(
+    patterns=(r"chiffres?\s+d.affaires\s+nets?", r"montant\s+net\s+du\s+chiffre"),
+    forbidden=(r"total\s+des\s+produits", r"%"),
+)
+
+EXTERNAL_SERVICES = Label(
+    patterns=(r"autres\s+achats\s+et\s+charges\s+externes",),
+    forbidden=(r"total",),
+)
+
+WAGES = Label(patterns=(r"salaires\s+et\s+traitements",), forbidden=(r"total",))
+SOCIAL_CHARGES = Label(patterns=(r"charges\s+sociales",), forbidden=(r"total",))
+
+DEPRECIATION = Label(
+    patterns=(r"dotations?\s+aux\s+amortissements\s+sur\s+immobilisati",
+              r"-\s*dotations?\s+aux\s+amortissements",
+              r"dotations?\s+aux\s+amortissements"),
+    forbidden=(r"exceptionnelle", r"financiere", r"derogatoire", r"total"),
+)
+
+FINANCIAL_RESULT = Label(
+    patterns=(r"resultat\s+financier",),
+    forbidden=(r"courant\s+avant", r"total"),
+)
+
+INCOME_TAX = Label(
+    patterns=(r"imp[oô]ts?\s+sur\s+les\s+benefices",),
+    forbidden=(r"total",),
+)
+
+# Cost of goods sold is not printed as a line. It is built from purchases and
+# the movement in inventory, per the schema's notes. Production stockee is
+# excluded: it is a product of the period, not a purchase -- the same reading
+# of notes-over-label_fr applied to BS_CAPITAL_EQUITY and PL_DEPRECIATION.
+PURCHASES_GOODS = Label(
+    patterns=(r"achats?\s+de\s+marchandises",), forbidden=(r"total", r"variation"))
+STOCK_GOODS = Label(
+    patterns=(r"variation\s+de\s+stocks?\s*\(?\s*\[?\s*marchandises",), forbidden=(r"total",))
+PURCHASES_MATERIALS = Label(
+    patterns=(r"achats?\s+de\s+mati[eè]res\s+premi",), forbidden=(r"total", r"variation"))
+STOCK_MATERIALS = Label(
+    patterns=(r"variation\s+de\s+stocks?\s*\(?\s*\[?\s*mati[eè]res",), forbidden=(r"total",))
+
+AVG_WORKFORCE = Label(
+    patterns=(r"effectif\s+moyen\s+du\s+personnel", r"effectif\s+moyen"),
+    forbidden=(r"total",),
+)

@@ -284,6 +284,118 @@
           ],
           "snippet": "2 151 560 365 358",
           "confidence": 0.9
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 4982524.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8585,
+            0.2037,
+            0.9515,
+            0.2168
+          ],
+          "snippet": "4 982 524",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 1339065.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8585,
+            0.4233,
+            0.9523,
+            0.438
+          ],
+          "snippet": "1 339 065",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 149350.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8779,
+            0.5045,
+            0.9523,
+            0.5175
+          ],
+          "snippet": "149 350",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_FINANCIAL_RESULTS_FRGAAP",
+          "value": 18831.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8876,
+            0.9273,
+            0.9535,
+            0.942
+          ],
+          "snippet": "18 831",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 164610.0,
+          "unit": "EUR",
+          "page": 5,
+          "bbox": [
+            0.8811,
+            0.3217,
+            0.9563,
+            0.335
+          ],
+          "snippet": "164 610",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 1905706.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8589,
+            0.4643,
+            0.9535,
+            0.498
+          ],
+          "snippet": "1 476 746 428 960",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 1044139.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8771,
+            0.3427,
+            0.9527,
+            0.378
+          ],
+          "snippet": "956 557 87 582",
+          "confidence": 0.5
+        },
+        {
+          "field_key": "META_AVG_WORKFORCE_FRGAAP",
+          "value": 47.0,
+          "unit": "count",
+          "page": 43,
+          "bbox": [
+            0.2342,
+            0.2134,
+            0.4348,
+            0.2216
+          ],
+          "snippet": "Effectif moyen du personnal . 47 personnes.",
+          "confidence": 0.75
         }
       ]
     },
@@ -347,6 +459,118 @@
           ],
           "snippet": "1 515 838 465 358",
           "confidence": 0.9
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 5564581.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8531,
+            0.1998,
+            0.9455,
+            0.2124
+          ],
+          "snippet": "5 564 581",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 1432377.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8491,
+            0.4219,
+            0.9439,
+            0.4361
+          ],
+          "snippet": "1 432 377",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 321856.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8705,
+            0.5031,
+            0.9447,
+            0.5168
+          ],
+          "snippet": "321 856",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_FINANCIAL_RESULTS_FRGAAP",
+          "value": -76778.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8729,
+            0.9264,
+            0.9471,
+            0.9412
+          ],
+          "snippet": "76 778)",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 125062.0,
+          "unit": "EUR",
+          "page": 5,
+          "bbox": [
+            0.8696,
+            0.3144,
+            0.9435,
+            0.3272
+          ],
+          "snippet": "125 062",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 2212508.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8503,
+            0.4629,
+            0.9451,
+            0.4968
+          ],
+          "snippet": "1 688 833 523 675",
+          "confidence": 0.5
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 1008553.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8495,
+            0.3409,
+            0.9523,
+            0.3757
+          ],
+          "snippet": "1 219 497 210 944)",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "META_AVG_WORKFORCE_FRGAAP",
+          "value": 47.0,
+          "unit": "count",
+          "page": 42,
+          "bbox": [
+            0.2266,
+            0.2109,
+            0.5801,
+            0.2192
+          ],
+          "snippet": "Effectif moyen du personnel : 47 personnes dont 9 apprentis et 2 handicapés.",
+          "confidence": 0.75
         }
       ]
     },
@@ -396,6 +620,90 @@
           ],
           "snippet": "3 202 002 1 331 364",
           "confidence": 0.75
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 4978292.0,
+          "unit": "EUR",
+          "page": 16,
+          "bbox": [
+            0.7051,
+            0.248,
+            0.7745,
+            0.26
+          ],
+          "snippet": "4 978 292",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 884031.0,
+          "unit": "EUR",
+          "page": 16,
+          "bbox": [
+            0.7176,
+            0.4469,
+            0.7745,
+            0.4592
+          ],
+          "snippet": "884 031",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 236796.0,
+          "unit": "EUR",
+          "page": 16,
+          "bbox": [
+            0.7184,
+            0.5783,
+            0.7753,
+            0.59
+          ],
+          "snippet": "236 796",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 302337.0,
+          "unit": "EUR",
+          "page": 17,
+          "bbox": [
+            0.7204,
+            0.7063,
+            0.7761,
+            0.718
+          ],
+          "snippet": "302 337",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 1347162.0,
+          "unit": "EUR",
+          "page": 16,
+          "bbox": [
+            0.7067,
+            0.5176,
+            0.7753,
+            0.5441
+          ],
+          "snippet": "1 044 010 303 152",
+          "confidence": 0.5
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 1491570.0,
+          "unit": "EUR",
+          "page": 16,
+          "bbox": [
+            0.7071,
+            0.3916,
+            0.7745,
+            0.4464
+          ],
+          "snippet": "247 635 1 285 010 (41 075)",
+          "confidence": 0.5
         }
       ]
     },
@@ -445,6 +753,90 @@
           ],
           "snippet": "6 267 354 609 545",
           "confidence": 0.75
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 7362279.0,
+          "unit": "EUR",
+          "page": 27,
+          "bbox": [
+            0.7106,
+            0.2442,
+            0.7783,
+            0.2558
+          ],
+          "snippet": "7 362 279",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 928188.0,
+          "unit": "EUR",
+          "page": 27,
+          "bbox": [
+            0.7215,
+            0.4424,
+            0.7791,
+            0.4541
+          ],
+          "snippet": "928 188",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 267890.0,
+          "unit": "EUR",
+          "page": 27,
+          "bbox": [
+            0.7215,
+            0.5733,
+            0.7783,
+            0.585
+          ],
+          "snippet": "267 890",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 621467.0,
+          "unit": "EUR",
+          "page": 29,
+          "bbox": [
+            0.7166,
+            0.6985,
+            0.7739,
+            0.7119
+          ],
+          "snippet": "621 467",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 1943291.0,
+          "unit": "EUR",
+          "page": 27,
+          "bbox": [
+            0.7098,
+            0.5128,
+            0.7783,
+            0.5391
+          ],
+          "snippet": "1 461 931 481 360",
+          "confidence": 0.5
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 1926715.0,
+          "unit": "EUR",
+          "page": 27,
+          "bbox": [
+            0.711,
+            0.3862,
+            0.7791,
+            0.441
+          ],
+          "snippet": "348 255 1 858 354 (279 894)",
+          "confidence": 0.5
         }
       ]
     },
@@ -479,6 +871,76 @@
             0.7316
           ],
           "snippet": "7 255 755 837 588",
+          "confidence": 0.5
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 7707458.0,
+          "unit": "EUR",
+          "page": 11,
+          "bbox": [
+            0.2511,
+            0.5998,
+            0.2709,
+            0.6358
+          ],
+          "snippet": "7 707 458",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 959477.0,
+          "unit": "EUR",
+          "page": 11,
+          "bbox": [
+            0.4422,
+            0.6004,
+            0.4591,
+            0.6295
+          ],
+          "snippet": "959 477",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 2157428.0,
+          "unit": "EUR",
+          "page": 11,
+          "bbox": [
+            0.6957,
+            0.6001,
+            0.711,
+            0.6352
+          ],
+          "snippet": "2 157 428",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 435912.0,
+          "unit": "EUR",
+          "page": 11,
+          "bbox": [
+            0.5228,
+            0.601,
+            0.5377,
+            0.6298
+          ],
+          "snippet": "435 912",
+          "confidence": 0.5
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 2350734.0,
+          "unit": "EUR",
+          "page": 11,
+          "bbox": [
+            0.3898,
+            0.6007,
+            0.445,
+            0.6346
+          ],
+          "snippet": "424 104 1 968 969 (42 339)",
           "confidence": 0.5
         }
       ]
@@ -543,6 +1005,118 @@
           ],
           "snippet": "58 362",
           "confidence": 0.9
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 1048023.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7047,
+            0.168,
+            0.7979,
+            0.1811
+          ],
+          "snippet": "1 048 023",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 385028.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7236,
+            0.4029,
+            0.7991,
+            0.4174
+          ],
+          "snippet": "385 028",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 53693.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7336,
+            0.4889,
+            0.7991,
+            0.5026
+          ],
+          "snippet": "53 693",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_FINANCIAL_RESULTS_FRGAAP",
+          "value": -20300.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7284,
+            0.9371,
+            0.8087,
+            0.9526
+          ],
+          "snippet": "(20 300)",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 1146.0,
+          "unit": "EUR",
+          "page": 7,
+          "bbox": [
+            0.7421,
+            0.339,
+            0.8003,
+            0.3544
+          ],
+          "snippet": "1 146",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 469603.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7244,
+            0.4463,
+            0.7999,
+            0.482
+          ],
+          "snippet": "378 395 91 208",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 146888.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7228,
+            0.36,
+            0.9572,
+            0.3966
+          ],
+          "snippet": "152 338 (5 450)",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "META_AVG_WORKFORCE_FRGAAP",
+          "value": 9.0,
+          "unit": "count",
+          "page": 16,
+          "bbox": [
+            0.7445,
+            0.6914,
+            0.7597,
+            0.7046
+          ],
+          "snippet": "9",
+          "confidence": 0.95
         }
       ]
     },
@@ -605,6 +1179,104 @@
             0.8028
           ],
           "snippet": "84 561",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 964484.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7196,
+            0.1696,
+            0.7933,
+            0.1821
+          ],
+          "snippet": "964 484",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 364789.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7184,
+            0.4039,
+            0.7941,
+            0.417
+          ],
+          "snippet": "364 789",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 66303.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7293,
+            0.4894,
+            0.7925,
+            0.5025
+          ],
+          "snippet": "66 303",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_FINANCIAL_RESULTS_FRGAAP",
+          "value": -13520.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7212,
+            0.9386,
+            0.7973,
+            0.9517
+          ],
+          "snippet": "(13 520)",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 1146.0,
+          "unit": "EUR",
+          "page": 7,
+          "bbox": [
+            0.8938,
+            0.3405,
+            0.9491,
+            0.353
+          ],
+          "snippet": "1 146",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 379848.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7184,
+            0.4464,
+            0.7933,
+            0.4814
+          ],
+          "snippet": "308 938 70 910",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 127282.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.7184,
+            0.3609,
+            0.7933,
+            0.3962
+          ],
+          "snippet": "125 964 1 318",
           "confidence": 0.9
         }
       ]
@@ -732,6 +1404,104 @@
           ],
           "snippet": "367 608",
           "confidence": 0.9
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 1800826.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8515,
+            0.2149,
+            0.9458,
+            0.2274
+          ],
+          "snippet": "1 800 826",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 297253.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8708,
+            0.4352,
+            0.945,
+            0.4477
+          ],
+          "snippet": "297 253",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 38537.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8804,
+            0.5148,
+            0.9458,
+            0.5273
+          ],
+          "snippet": "38 537",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_FINANCIAL_RESULTS_FRGAAP",
+          "value": -2778.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8929,
+            0.9335,
+            0.9543,
+            0.9477
+          ],
+          "snippet": "2 778)",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 63846.0,
+          "unit": "EUR",
+          "page": 5,
+          "bbox": [
+            0.8868,
+            0.3272,
+            0.9506,
+            0.34
+          ],
+          "snippet": "63 846",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 593755.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8708,
+            0.4747,
+            0.9458,
+            0.5074
+          ],
+          "snippet": "444 500 149 255",
+          "confidence": 0.5
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 596598.0,
+          "unit": "EUR",
+          "page": 4,
+          "bbox": [
+            0.8708,
+            0.355,
+            0.9522,
+            0.4278
+          ],
+          "snippet": "194 094 227) 321 507 81 224",
+          "confidence": 0.5
         }
       ]
     },
@@ -795,6 +1565,104 @@
           ],
           "snippet": "229 619",
           "confidence": 0.9
+        },
+        {
+          "field_key": "PL_REVENUE_FRGAAP",
+          "value": 1805459.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.8548,
+            0.2109,
+            0.9505,
+            0.2242
+          ],
+          "snippet": "1 805 459",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_EXT_SERVICES_COSTS_FRGAAP",
+          "value": 329158.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.8757,
+            0.4337,
+            0.9505,
+            0.4468
+          ],
+          "snippet": "329 158",
+          "confidence": 0.55
+        },
+        {
+          "field_key": "PL_DEPRECIATION_AMORTIZATION_FRGAAP",
+          "value": 48352.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.8862,
+            0.5145,
+            0.9501,
+            0.5279
+          ],
+          "snippet": "48 352",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_FINANCIAL_RESULTS_FRGAAP",
+          "value": -2096.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.8966,
+            0.9394,
+            0.959,
+            0.9536
+          ],
+          "snippet": "2 096)",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_INCOME_TAX_FRGAAP",
+          "value": 53240.0,
+          "unit": "EUR",
+          "page": 7,
+          "bbox": [
+            0.893,
+            0.3238,
+            0.957,
+            0.3375
+          ],
+          "snippet": "53 240",
+          "confidence": 0.95
+        },
+        {
+          "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
+          "value": 662180.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.8749,
+            0.4741,
+            0.9505,
+            0.5074
+          ],
+          "snippet": "499 659 162 521",
+          "confidence": 0.9
+        },
+        {
+          "field_key": "PL_COGS_FRGAAP",
+          "value": 531093.0,
+          "unit": "EUR",
+          "page": 6,
+          "bbox": [
+            0.8749,
+            0.3526,
+            0.9578,
+            0.428
+          ],
+          "snippet": "138 591 45 440) 490 756 52 814)",
+          "confidence": 0.5
         }
       ]
     },

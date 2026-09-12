@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import re
 import sys
 import time
 from dataclasses import dataclass
@@ -20,16 +21,21 @@ from dataclasses import dataclass
 from pipeline import checks, units
 from pipeline.fields import Field, Reading, calibration, read
 from pipeline.geometry import normalise_box
-from pipeline.labels import (CASH, MARKETABLE_SECURITIES, SHARE_CAPITAL,
+from pipeline.labels import (AVG_WORKFORCE, CASH, DEPRECIATION,
+                             EXTERNAL_SERVICES, FINANCIAL_RESULT, INCOME_TAX,
+                             MARKETABLE_SECURITIES, PURCHASES_GOODS,
+                             PURCHASES_MATERIALS, REVENUE, SHARE_CAPITAL,
+                             SOCIAL_CHARGES, STOCK_GOODS, STOCK_MATERIALS,
                              TOTAL_ASSETS, TOTAL_EQUITY, TOTAL_LIABILITIES,
-                             best_row)
+                             WAGES, best_row)
 from pipeline.numbers import figures_in
 from pipeline.ocr_rows import load_page, rows_of
-from pipeline.pages import ACTIF, PASSIF, classify_document
+from pipeline.pages import (ACTIF, PASSIF, RESULTAT, RESULTAT_SUITE,
+                            WORKFORCE, classify_document)
 from pipeline.scope import SCOPE, paths
 
-# The fields wired up so far. The seven P&L fields are not among them yet, and
-# the README says so: an absent field should not read as a clean sheet.
+# Bilan. Total assets is read first: it anchors the current-year column for
+# everything else on the two pages.
 BALANCE_SHEET = [
     (Field("BS_TOTAL_ASSETS_FRGAAP", "CN", TOTAL_ASSETS), ACTIF),
     (Field("BS_TOTAL_EQUITY_FRGAAP", "DL", TOTAL_EQUITY), PASSIF),
@@ -40,6 +46,29 @@ BALANCE_SHEET = [
 CASH_PARTS = [
     Field("_cash", "CG", CASH),
     Field("_securities", "CD", MARKETABLE_SECURITIES),
+]
+
+# Compte de resultat. Single-line fields first.
+INCOME_STATEMENT = [
+    (Field("PL_EXT_SERVICES_COSTS_FRGAAP", "FW", EXTERNAL_SERVICES), RESULTAT),
+    (Field("PL_DEPRECIATION_AMORTIZATION_FRGAAP", "GA", DEPRECIATION), RESULTAT),
+    (Field("PL_FINANCIAL_RESULTS_FRGAAP", "GV", FINANCIAL_RESULT), RESULTAT),
+    (Field("PL_INCOME_TAX_FRGAAP", "HK", INCOME_TAX), RESULTAT_SUITE),
+]
+
+# Personnel cost is wages plus social charges, two printed lines.
+PERSONNEL_PARTS = [
+    Field("_wages", "FY", WAGES),
+    Field("_social", "FZ", SOCIAL_CHARGES),
+]
+
+# Cost of goods sold is not printed at all: purchases plus the movement in
+# inventory. The stock lines are signed and are added as printed.
+COGS_PARTS = [
+    Field("_purch_goods", "FS", PURCHASES_GOODS),
+    Field("_stock_goods", "FT", STOCK_GOODS),
+    Field("_purch_materials", "FU", PURCHASES_MATERIALS),
+    Field("_stock_materials", "FV", STOCK_MATERIALS),
 ]
 
 
@@ -162,11 +191,156 @@ def process(siren: str, stem: str) -> DocumentResult:
         )
         entry["fields"].append(emit(built, "BS_CASH_CURRENT_ASSET_FRGAAP", unit, p["pdf"]))
 
+    entry["fields"].extend(income_statement(p, statements, unit, notes))
+
     if meta.get("confidentiality") == "Partiellement confidentiel":
         notes.append("income statement withheld from publication (L. 232-25): "
                      "the seven P&L fields are absent from this filing")
 
     return DocumentResult(entry, notes)
+
+
+def _sum_parts(parts_fields, rows, page, key, unit, pdf, penalty=0.05):
+    """A field built by adding printed lines, or None when none of them are there.
+
+    The box spans every line used, because that is where the value came from;
+    reporting only the first would point at a figure that is not the one we
+    are claiming.
+    """
+    parts = [read(f, rows, page, None) for f in parts_fields]
+    parts = [r for r in parts if r]
+    if not parts:
+        return None
+    built = Reading(
+        sum(r.value for r in parts),
+        [c for r in parts for c in r.cells],
+        page,
+        f"sum of {len(parts)} rows",
+        min(r.confidence for r in parts) - penalty,
+    )
+    return emit(built, key, unit, pdf)
+
+
+def revenue(rows, page: int, unit: str, pdf: str):
+    """Net revenue: the total, not the domestic column beside it.
+
+    The form splits revenue into France and export and then totals it, so the
+    figure we want is the third on the row, not the first. Where the code FL
+    is printed we take it; otherwise we take the first figure that the other
+    two add up to, which checks the reading as it makes it.
+    """
+    from pipeline import liasse
+
+    hit = liasse.find(rows, "FL")
+    if hit:
+        value, cells = hit
+        return emit(Reading(value, cells, page, "code FL", 0.95),
+                    "PL_REVENUE_FRGAAP", unit, pdf)
+
+    row = best_row(rows, REVENUE)
+    if not row:
+        return None
+    figures = figures_in(row)
+    for i in range(len(figures) - 2):
+        france, export, total = figures[i][0], figures[i + 1][0], figures[i + 2][0]
+        if abs(france + export - total) <= checks.TOLERANCE:
+            return emit(Reading(total, figures[i + 2][1], page,
+                                "label; France + export reconciles", 0.90),
+                        "PL_REVENUE_FRGAAP", unit, pdf)
+    if figures:
+        return emit(Reading(figures[0][0], figures[0][1], page,
+                            "label only; no France/export split to check against", 0.55),
+                    "PL_REVENUE_FRGAAP", unit, pdf)
+    return None
+
+
+def income_statement(p: dict, statements: dict, unit: str, notes: list[str]) -> list[dict]:
+    """The seven P&L fields, where the filing publishes an income statement."""
+    out: list[dict] = []
+    page_of = {
+        RESULTAT: statements.get(RESULTAT, [None])[0],
+        RESULTAT_SUITE: statements.get(RESULTAT_SUITE, [None])[0],
+    }
+    # The second half of the form is where income tax sits; when it was not
+    # identified separately, the first half is the better guess than nothing.
+    if page_of[RESULTAT_SUITE] is None:
+        page_of[RESULTAT_SUITE] = page_of[RESULTAT]
+    if page_of[RESULTAT] is None:
+        return out
+
+    rows_of_page = {pg: rows_of(load_page(p["ocr"], pg))
+                    for pg in set(page_of.values()) if pg}
+
+    main = rows_of_page[page_of[RESULTAT]]
+
+    got = revenue(main, page_of[RESULTAT], unit, p["pdf"])
+    if got:
+        out.append(got)
+
+    for field, statement in INCOME_STATEMENT:
+        page = page_of[statement]
+        reading = read(field, rows_of_page[page], page, None)
+        if reading:
+            out.append(emit(reading, field.key, unit, p["pdf"]))
+
+    for parts, key in ((PERSONNEL_PARTS, "PL_PERSONNEL_COSTS_FRGAAP"),
+                       (COGS_PARTS, "PL_COGS_FRGAAP")):
+        built = _sum_parts(parts, main, page_of[RESULTAT], key, unit, p["pdf"])
+        if built:
+            out.append(built)
+        elif key == "PL_COGS_FRGAAP":
+            notes.append("cost of goods sold: none of its component lines found")
+
+    got = workforce(p, statements, p["pdf"])
+    if got:
+        out.append(got)
+
+    return out
+
+
+# "43 personnes" is not a figure by the rule the rest of the pipeline uses --
+# more letters than digits, which is how a CERFA code is told from a value --
+# but it is the only place some filings state their headcount.
+_HEADCOUNT = re.compile(r"(?<![\d.,])(\d{1,5})(?![\d.,])")
+
+
+def workforce(p: dict, statements: dict, pdf: str):
+    """Average headcount: the one field of the twelve that is not money.
+
+    The liasse prints it against code YP. Three filings state it in the prose
+    of the annexe instead -- "Effectif moyen du personnel 43 personnes" -- so
+    where the usual reading finds nothing we take the first bare integer on
+    the row. The unit is `count`, never a currency.
+    """
+    page = statements.get(WORKFORCE, [None])[0]
+    if page is None:
+        return None
+    rows = rows_of(load_page(p["ocr"], page))
+
+    reading = read(Field("META_AVG_WORKFORCE_FRGAAP", "YP", AVG_WORKFORCE),
+                   rows, page, None)
+    if reading and reading.value:
+        return emit(reading, "META_AVG_WORKFORCE_FRGAAP", "count", pdf)
+
+    row = best_row(rows, AVG_WORKFORCE)
+    if row is None:
+        return None
+
+    # The prose arrives as one box -- "Effectif moyen du personnel 43 personnes"
+    # -- so there is no cell to single out. Take the first bare integer after
+    # the wording, which is the headcount; anything later is a breakdown
+    # ("dont 9 apprentis") and not the figure asked for.
+    for cell in row.cells:
+        tail = re.sub(r"^.*?effectif\s+moyen[^\d]*", "", cell.text,
+                      flags=re.IGNORECASE | re.DOTALL)
+        match = _HEADCOUNT.search(tail if tail != cell.text else cell.text)
+        if not match:
+            continue
+        count = float(match.group(1))
+        if 0 < count < 100000:
+            return emit(Reading(count, [cell], page, "stated in the annexe prose", 0.75),
+                        "META_AVG_WORKFORCE_FRGAAP", "count", pdf)
+    return None
 
 
 def main() -> int:

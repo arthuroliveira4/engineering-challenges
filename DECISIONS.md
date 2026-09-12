@@ -68,3 +68,24 @@ report zero.
 **What would overturn this:** a compte de résultat found in those filings
 under wording we did not search for. We checked for six of its mandatory
 lines and found at most one in each.
+
+## Where the schema contradicts itself, we follow `notes`
+
+`financial_fields.json` gives each field a `label_fr` and a `notes`, and three
+times they disagree:
+
+| field | `label_fr` | `notes` |
+|---|---|---|
+| `BS_CAPITAL_EQUITY` | capital social **+ primes + réserves** | called-up share capital |
+| `PL_DEPRECIATION_AMORTIZATION` | dotations d'exploitation (amort. **+ prov.**) | depreciation and amortisation |
+| `PL_COGS` | ... **+ production stockée** | built from purchases and the change in inventory |
+
+We follow `notes` in all three: it is the more specific of the two, and one
+rule applied three times is easier to defend than three separate calls. So
+share capital is code `DA` alone, depreciation is `GA` alone, and cost of
+goods sold is purchases plus the movement in inventory, with production
+stockée excluded as a product of the period rather than a purchase.
+
+**What would overturn this:** the production schema these were reduced from
+meaning the broader reading. Swapping any of the three is a one-line change
+in `pipeline/labels.py`.
