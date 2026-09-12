@@ -1,0 +1,47 @@
+# Decisions
+
+Judgement calls this pipeline makes, and the evidence behind each. The brief
+says the answer to work like this is often contested and there is no answer
+key, so what follows is reasoning, not assertion. Each entry names what could
+make it wrong.
+
+## Units: every filing in scope is EUR, including 328024377
+
+The brief flags `328024377` as reporting in thousands. Its own filing
+disagrees, in three ways:
+
+- the accounting policy note reads *"sauf mention, les montants sont exprimés
+  en euros"* — unless stated otherwise, amounts are in euros;
+- the `K€` statement sits inside the *tableau des filiales et participations*,
+  and reads *"participations étrangères, détenues entre 10 et 50%, les
+  montants sont indiqués en K€"* — it governs that schedule;
+- magnitude: total assets read 5 641 580 and revenue 4 982 166 for a Lyon
+  chocolatier. Millions is right; billions is not.
+
+**What would overturn this:** a `K€` marker printed on the liasse pages
+themselves, which we did not find.
+
+## BS_CAPITAL_EQUITY_FRGAAP is share capital alone
+
+`financial_fields.json` contradicts itself on this field: `label_fr` says
+*"Capital social + primes + réserves"*, while `notes` says *"Called-up share
+capital (capital social)"*. The two differ by an order of magnitude — on
+328024377, 152 500 against roughly 2.8 million.
+
+We report share capital alone, read from CERFA code `DA`. The `notes` wording
+is the more specific of the two, and `DA` extracts it exactly rather than by
+summing lines we would then have to defend individually.
+
+**What would overturn this:** confirmation that the production schema this was
+reduced from means the broader figure.
+
+## A figure we cannot read is omitted, not reconstructed
+
+On `445070311/bilan_2025-05-15`, the OCR drops a leading digit from total
+assets: it reads `952 242` where the page says `10 952 242`. We can prove the
+correct value two ways — `12 652 618 − 1 700 376` reconciles, and it matches
+the N-1 column of the previous filing — but arithmetic reconstruction is not
+reading, and the box we would report would not span the digits we used.
+
+Such fields are omitted, per the schema's own rule that a field which cannot
+be established is left out rather than reported as zero.
