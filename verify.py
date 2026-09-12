@@ -37,14 +37,43 @@ def _font():
     return ImageFont.load_default()
 
 
+def _rotation_of(pdf_path: str, page: int) -> int:
+    """How far this page is printed sideways, per the pipeline's own detector."""
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from pipeline.ocr_rows import detect_rotation, load_page
+
+    siren = pdf_path.split("/")[1]
+    doc_id = os.path.basename(pdf_path).replace(".pdf", "").rsplit("_", 1)[1]
+    try:
+        return detect_rotation(load_page(f"data/{siren}/bilans/ocr/{doc_id}", page))
+    except (OSError, KeyError, IndexError):
+        return 0
+
+
 def crop_for(pdf_path: str, field: dict) -> Image.Image:
-    """The row this value sits on, with the submitted box drawn on it."""
+    """The row this value sits on, with the submitted box drawn on it.
+
+    Sideways pages are turned upright before cropping. The box is computed in
+    page coordinates first and rotated with the image, so what you see is
+    still exactly the box in results.json -- just readable.
+    """
     with pymupdf.open(pdf_path) as doc:
         page = doc[field["page"] - 1]
         pixmap = page.get_pixmap(dpi=DPI)
         image = Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples)
 
     x0, y0, x1, y1 = field["bbox"]
+
+    rotation = _rotation_of(pdf_path, field["page"])
+    if rotation:
+        # PIL rotates anticlockwise; the box corners move with it.
+        image = image.rotate(-rotation, expand=True)
+        if rotation == 90:
+            x0, y0, x1, y1 = 1 - y1, x0, 1 - y0, x1
+        else:
+            x0, y0, x1, y1 = y0, 1 - x1, y1, 1 - x0
+
     px0, py0 = x0 * image.width, y0 * image.height
     px1, py1 = x1 * image.width, y1 * image.height
 

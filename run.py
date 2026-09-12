@@ -20,6 +20,7 @@ from dataclasses import dataclass
 
 from pipeline import checks, units
 from pipeline.fields import Field, Reading, calibration, read
+from pipeline.columns import calibrate_by_identity
 from pipeline.geometry import normalise_box
 from pipeline.labels import (AVG_WORKFORCE, CASH, DEPRECIATION,
                              EXTERNAL_SERVICES, FINANCIAL_RESULT, INCOME_TAX,
@@ -37,7 +38,10 @@ from pipeline.scope import SCOPE, paths
 # Bilan. Total assets is read first: it anchors the current-year column for
 # everything else on the two pages.
 BALANCE_SHEET = [
-    (Field("BS_TOTAL_ASSETS_FRGAAP", "CN", TOTAL_ASSETS), ACTIF),
+    # No code: the liasse prints CO for the gross total and 1A for the
+    # depreciation, and leaves the net column of TOTAL GENERAL unlabelled.
+    # CN is "ecarts de conversion actif" and reading it here was a mistake.
+    (Field("BS_TOTAL_ASSETS_FRGAAP", None, TOTAL_ASSETS), ACTIF),
     (Field("BS_TOTAL_EQUITY_FRGAAP", "DL", TOTAL_EQUITY), PASSIF),
     (Field("BS_CAPITAL_EQUITY_FRGAAP", "DA", SHARE_CAPITAL), PASSIF),
 ]
@@ -45,7 +49,7 @@ BALANCE_SHEET = [
 # Cash is built rather than printed: disponibilites plus marketable securities.
 CASH_PARTS = [
     Field("_cash", "CG", CASH),
-    Field("_securities", "CD", MARKETABLE_SECURITIES),
+    Field("_securities", "CE", MARKETABLE_SECURITIES),   # CE is net; CD is gross
 ]
 
 # Compte de resultat. Single-line fields first.
@@ -162,8 +166,13 @@ def process(siren: str, stem: str) -> DocumentResult:
 
     unit = units.detect(p["ocr"], [actif_page, passif_page]).unit
 
+    # With a proved figure we calibrate against it. Without one -- the figure
+    # was withheld -- the actif can still calibrate itself: gross less
+    # depreciation equals net on every line, so the rows that satisfy it agree
+    # on where the net column is. Otherwise cash reads the gross column.
     column = {
-        ACTIF: calibration(actif_rows, anchor) if anchor else None,
+        ACTIF: (calibration(actif_rows, anchor) if anchor
+                else calibrate_by_identity(actif_rows)),
         PASSIF: calibration(passif_rows, anchor) if anchor else None,
     }
     rows_for = {ACTIF: actif_rows, PASSIF: passif_rows}
@@ -192,6 +201,8 @@ def process(siren: str, stem: str) -> DocumentResult:
         entry["fields"].append(emit(built, "BS_CASH_CURRENT_ASSET_FRGAAP", unit, p["pdf"]))
 
     entry["fields"].extend(income_statement(p, statements, unit, notes))
+
+    notes.extend(checks.coherence(entry["fields"]))
 
     if meta.get("confidentiality") == "Partiellement confidentiel":
         notes.append("income statement withheld from publication (L. 232-25): "

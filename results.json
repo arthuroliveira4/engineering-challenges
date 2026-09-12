@@ -277,7 +277,7 @@
           "unit": "EUR",
           "page": 2,
           "bbox": [
-            0.5738,
+            0.8633,
             0.7729,
             0.9515,
             0.8052
@@ -452,8 +452,8 @@
           "unit": "EUR",
           "page": 2,
           "bbox": [
-            0.5635,
-            0.7628,
+            0.8523,
+            0.7633,
             0.9378,
             0.7967
           ],
@@ -861,17 +861,17 @@
         },
         {
           "field_key": "BS_CASH_CURRENT_ASSET_FRGAAP",
-          "value": 8093343.0,
+          "value": 8024487.0,
           "unit": "EUR",
           "page": 9,
           "bbox": [
-            0.7299,
-            0.6951,
-            0.7626,
-            0.7316
+            0.732,
+            0.581,
+            0.761,
+            0.6158
           ],
-          "snippet": "7 255 755 837 588",
-          "confidence": 0.5
+          "snippet": "7 255 755 768 732",
+          "confidence": 0.75
         },
         {
           "field_key": "PL_REVENUE_FRGAAP",
@@ -903,30 +903,30 @@
         },
         {
           "field_key": "PL_INCOME_TAX_FRGAAP",
-          "value": 2157428.0,
+          "value": 539793.0,
           "unit": "EUR",
           "page": 11,
           "bbox": [
-            0.6957,
-            0.6001,
-            0.711,
-            0.6352
+            0.6868,
+            0.1289,
+            0.705,
+            0.1583
           ],
-          "snippet": "2 157 428",
+          "snippet": "539 793",
           "confidence": 0.55
         },
         {
           "field_key": "PL_PERSONNEL_COSTS_FRGAAP",
-          "value": 435912.0,
+          "value": 2014307.0,
           "unit": "EUR",
           "page": 11,
           "bbox": [
-            0.5228,
+            0.5111,
             0.601,
             0.5377,
-            0.6298
+            0.6352
           ],
-          "snippet": "435 912",
+          "snippet": "1 578 395 435 912",
           "confidence": 0.5
         },
         {
@@ -1288,16 +1288,16 @@
       "fields": [
         {
           "field_key": "BS_TOTAL_ASSETS_FRGAAP",
-          "value": 6987.0,
+          "value": 1689390.0,
           "unit": "EUR",
           "page": 4,
           "bbox": [
-            0.436,
-            0.6715,
-            0.487,
-            0.684
+            0.6959,
+            0.8695,
+            0.7842,
+            0.8803
           ],
-          "snippet": "6 987",
+          "snippet": "1 689 390",
           "confidence": 0.98
         },
         {
@@ -1732,7 +1732,7 @@
   ],
   "run": {
     "cost_eur_per_page": 0.0,
-    "seconds_per_page": 0.0022,
+    "seconds_per_page": 0.0029,
     "pages_processed": 415,
     "model": "provided OCR + rules",
     "notes": "No model and no API. Every figure is read from the OCR shipped in data/, so the marginal cost of a page is zero; the only spend is the time above, measured end to end over 415 pages on one core, writing this file. Accuracy is not claimed against an answer key -- there is none -- but against identities the filings must satisfy: total assets equals total liabilities, and gross less depreciation equals net. Figures failing them are omitted rather than reported. Only the four balance-sheet fields are wired up; the seven P&L fields and average workforce are not yet implemented, and five filings withhold their income statement by law in any case. See README.md."

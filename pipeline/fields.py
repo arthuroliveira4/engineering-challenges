@@ -22,7 +22,7 @@ from dataclasses import dataclass
 
 from pipeline import liasse
 from pipeline.columns import Column, pick
-from pipeline.labels import Label, best_row
+from pipeline.labels import Label, best_row, label_ends_at
 from pipeline.numbers import figures_in
 
 
@@ -65,14 +65,21 @@ def read(field: Field, rows, page: int, column: Column | None) -> Reading | None
     if field.label:
         row = best_row(rows, field.label)
         if row:
-            figures = figures_in(row)
+            # Only figures printed after the wording can belong to it. On the
+            # sideways filings a rebuilt row spans two columns of the
+            # statement, and without this the first figure on the row -- which
+            # belongs to whatever account was printed to the left -- gets
+            # reported under our label.
+            end = label_ends_at(row, field.label)
+            figures = [(value, cells) for value, cells in figures_in(row)
+                       if end is None or cells[0].x0 >= row.cells[end].x1]
             if column:
                 chosen = pick(figures, column)
                 if chosen:
                     return Reading(chosen[0], chosen[1], page, "label+column", 0.80)
-            # No calibration available: the leftmost figure is the current
-            # exercise on every layout in this corpus, but say so with a lower
-            # confidence rather than pretend the two routes are equivalent.
+            # No calibration available: the leftmost figure after the wording
+            # is the current exercise on every layout in this corpus, but say
+            # so at a lower confidence than a coded read.
             if figures:
                 return Reading(figures[0][0], figures[0][1], page, "label only", 0.55)
     return None

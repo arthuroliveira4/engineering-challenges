@@ -114,7 +114,10 @@ EXTERNAL_SERVICES = Label(
     forbidden=(r"total",),
 )
 
-WAGES = Label(patterns=(r"salaires\s+et\s+traitements",), forbidden=(r"total",))
+# The OCR renders "traitements" as "traiternents" on at least one filing --
+# rn for m is the classic scan confusion -- so match the stem, not the word.
+WAGES = Label(patterns=(r"salaires\s+et\s+trait\w*", r"salaires"),
+              forbidden=(r"total",))
 SOCIAL_CHARGES = Label(patterns=(r"charges\s+sociales",), forbidden=(r"total",))
 
 DEPRECIATION = Label(
@@ -157,3 +160,24 @@ AVG_WORKFORCE = Label(
     patterns=(r"effectif\s+moyen\s+du\s+personnel", r"effectif\s+moyen"),
     forbidden=(r"total",),
 )
+
+
+def label_ends_at(row, label: Label) -> int | None:
+    """Index of the cell where `label`'s wording finishes on this row.
+
+    Rebuilt rows are not always one account. A sideways filing prints two
+    columns of the statement side by side, so a row can read
+
+        RESULTAT D'EXPLOITATION 2 157 428 2 272 901 impots sur les benefices 539 793
+
+    where the wording we matched sits at the *end* and the first figures on
+    the row belong to something else entirely. Reading left to right, a figure
+    belongs to the label printed to its left -- so callers take only what
+    follows this index, and 2 157 428 stops being reported as income tax.
+    """
+    text = ""
+    for index, cell in enumerate(row.cells):
+        text = f"{text} {cell.text}".strip()
+        if label.rank(text) is not None:
+            return index
+    return None

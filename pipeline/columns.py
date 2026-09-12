@@ -72,3 +72,43 @@ def pick(figures, column: Column):
         return None
     return min(inside, key=lambda pair: abs(
         (pair[1][0].x0 + pair[1][-1].x1) / 2 - column.centre))
+
+
+def calibrate_by_identity(rows, tolerance: float = 2.0) -> Column | None:
+    """Find the net column on a bilan actif without a known figure to anchor on.
+
+    Normally the current-year column is located by the one value already
+    proved -- total assets, checked against total liabilities. When that check
+    fails and the figure is withheld, everything else on the page loses its
+    calibration too, and falling back to "the first figure after the label"
+    reads the gross column: on the actif, gross is printed first. That is how
+    445070311's 2025 cash came out as 8 093 343 against a page supporting
+    8 024 487 -- gross securities instead of net.
+
+    The page can calibrate itself instead. Every line of a bilan actif
+    satisfies gross - depreciation = net, so any row of three figures where
+    that holds reveals where the net column sits. We take the widest
+    agreement across the page rather than the first hit, since a coincidence
+    can satisfy the identity once but rarely twice in the same place.
+    """
+    from collections import Counter
+
+    from pipeline.numbers import figures_in
+
+    votes: Counter = Counter()
+    boxes: dict = {}
+    for row in rows:
+        figures = figures_in(row)
+        if len(figures) < 3:
+            continue
+        (gross, _), (depreciation, _), (net, cells) = figures[0], figures[1], figures[2]
+        if abs(gross - depreciation - net) > tolerance or net == 0:
+            continue
+        key = round(cells[0].x0 / 25)          # tolerate ragged right alignment
+        votes[key] += 1
+        boxes.setdefault(key, Column(cells[0].x0, cells[-1].x1))
+
+    if not votes:
+        return None
+    best, count = votes.most_common(1)[0]
+    return boxes[best] if count >= 2 else None

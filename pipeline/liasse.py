@@ -35,9 +35,9 @@ def codes_on(row) -> dict[str, float]:
     figures = figures_in(row)
     found: dict[str, float] = {}
 
-    for cell in row.cells:
+    for index, cell in enumerate(row.cells):
         token = cell.text.strip().upper().replace(" ", "")
-        if not _CODE.match(token) or token in _NOT_A_CODE:
+        if not _CODE.match(token) or token in _NOT_A_CODE or index == 0:
             continue
         to_the_right = [(v, cells) for v, cells in figures if cells[0].x0 >= cell.x1]
         if to_the_right:
@@ -55,9 +55,14 @@ def find(rows, code: str):
     from pipeline.numbers import figures_in
 
     for row in rows:
-        for cell in row.cells:
+        for index, cell in enumerate(row.cells):
             token = cell.text.strip().upper().replace(" ", "")
-            if token != code.upper():
+            # A code is never the leftmost thing on a line -- the wording is.
+            # One that leads a row has bled down from the row above during
+            # banding, and reading the figure beside it reports a neighbour's
+            # number: 'CN Clients et comptes rattaches BX 6 987' gave 6 987 as
+            # 504304205's total assets, against a page reading 1 689 390.
+            if token != code.upper() or index == 0:
                 continue
             to_the_right = [(v, cells) for v, cells in figures_in(row)
                             if cells[0].x0 >= cell.x1]
