@@ -89,3 +89,34 @@ stockée excluded as a product of the period rather than a purchase.
 **What would overturn this:** the production schema these were reduced from
 meaning the broader reading. Swapping any of the three is a one-line change
 in `pipeline/labels.py`.
+
+## A headcount read from prose gets the sentence's box, not the digits'
+
+Average workforce is the one field of the twelve that is not money, and the
+one the filings are least consistent about. Where the liasse prints it against
+line `YP` it reads like any other field and the box lands on the digits:
+`504304205`'s 2017 filing reports 9 with a box 1.5% of the page wide.
+
+Three filings of `328024377` state it in a sentence of the annexe instead, and
+the OCR returns the whole sentence as one box:
+
+```
+Effectif moyen du personnel : 47 personnes dont 9 apprentis et 2 handicapés.
+```
+
+We report 47 with that sentence as its box. It is coarser than every other box
+in the submission, and on this example the sentence prints three numbers, so
+the box alone does not say which one is claimed.
+
+We accept that rather than narrow it, for the same reason we omit a figure we
+cannot read: a tighter box would have to be interpolated from character
+positions inside the OCR polygon, and interpolation is not reading. These
+pages carry no text layer to search, and the OCR does not split the line.
+
+What makes the claim checkable instead is `snippet`, which carries the exact
+wording the figure came from, and `confidence`, which is 0.75 on this route
+against 0.95 for a coded read.
+
+**What would overturn this:** a finer OCR granularity on those pages, or a text
+layer to search — either would give the digits their own box, and the code
+would use it without changing anything else.

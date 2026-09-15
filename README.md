@@ -147,9 +147,35 @@ leading digit. The check catches it and the field is omitted. I can reconstruct
 the true value two ways, but arithmetic is not reading, and the box I would
 report would not span the digits I used.
 
-The `confidence` field records which route produced a value: 0.95 read from a
-CERFA line code, 0.90 built by summing printed lines, 0.80 matched by wording
-with a calibrated column, 0.55 matched by wording alone. Median is 0.90.
+The `confidence` field records which route produced a value:
+
+| | route |
+|---|---|
+| 0.98 | total assets, reconciled against total liabilities on a separate page |
+| 0.95 | read from a CERFA line code |
+| 0.90 | built by summing printed lines |
+| 0.80 | matched by wording, with a calibrated column |
+| 0.75 | a sum whose parts were matched by wording, or a headcount read from prose |
+| 0.55 | matched by wording alone, with no column to check it against |
+
+Median is 0.90.
+
+**One box is coarser than the rest, and it is the headcount.** Three filings
+state it in a sentence of the annexe rather than against line YP, and the OCR
+returns that whole sentence as a single box:
+
+```json
+{ "value": 47, "snippet": "Effectif moyen du personnel : 47 personnes dont 9 apprentis et 2 handicapés." }
+```
+
+So the box spans the sentence, not the digits — and that sentence prints three
+numbers. There is no finer box to report: those pages carry no text layer, and
+the OCR does not split the line, so a tighter box would have to be interpolated
+from character positions rather than read. That is the same line I refused to
+cross on 445070311's total assets, so I did not cross it here either. The
+`snippet` names the wording the figure was taken from, which is what makes the
+claim checkable; where the liasse prints YP properly — 504304205, 2017 — the
+box is on the digit alone and the confidence is 0.95.
 
 **Then I read all fifteen sheets.** Identities and the schema between them
 missed nine defects, because both are blind to the same thing: a figure that
