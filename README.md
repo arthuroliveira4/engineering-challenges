@@ -294,9 +294,10 @@ That leaves 6 I would rather have had:
 
 ## How I used AI
 
-I used Claude Code throughout, and it wrote essentially all of the Python in
-this repository. I am not going to dress that up: my contribution was
-direction and judgement, not authorship of the code.
+I used Claude Code throughout the project, and it wrote essentially all of the
+Python in this repository — every module in `pipeline/`, plus `run.py` and
+`verify.py`. I am not going to dress that up: my contribution was direction,
+judgement and criticising the AI's decisions, not authorship of the code.
 
 **What I decided.** To take the bilan challenge; to read the shipped OCR with
 rules rather than send pages to a vision model; and, where
@@ -305,14 +306,15 @@ That last one moves three fields and is argued in `DECISIONS.md`. I also asked
 for an explanation of anything I could not follow, and did not let a step past
 me until I could say why it was there.
 
-**What I checked.** I asked for a way to *see* the boxes rather than be told
-they were fine, which is where `verify.py` comes from. That mattered more than
-anything else I did. Reading all fifteen sheets turned up nine defects in
-output that had already passed the schema and the reconciliation identities:
-six figures that were simply wrong, one filing whose four boxes pointed at the
-wrong part of the page, and two figures dropped from pages that state them
-plainly. Every one was a plausible number produced by code that looked
-correct. They are listed with their causes under *Accuracy*.
+**What I checked.** I asked for a way to see the boxes rather than be told they
+were fine, which is where `verify.py` comes from — that, and trying to
+understand every step and what it implied for the rest of the pipeline. It
+mattered more than anything else I did: reading all fifteen sheets turned up
+nine defects in output that had already passed the schema and the
+reconciliation identities. Six figures that were simply wrong, one filing whose
+four boxes pointed at the wrong part of the page, and two figures dropped from
+pages that state them plainly. Every one was a plausible number produced by
+code that looked correct. They are listed with their causes under *Accuracy*.
 
 **Where it led me wrong.** It reported the reconciliation as passing on 11 of
 15 filings when several of those "matches" were coincidences between number
@@ -320,8 +322,5 @@ fragments. It wrote a check that threw away a correct figure by assuming any
 three-figure row meant gross/depreciation/net. And it left a sentence in
 `results.json` announcing that seven of the twelve fields were not implemented
 while the same file carried their values — a plain contradiction in the one
-field a reader consults to decide whether to trust the numbers, and it
-survived a whole working session before anyone re-read it.
-
-The habit I am taking from this: read the output, not the summary of the
-output. Every real defect here was found that way, and none of them any other.
+field a reader consults to decide whether to trust the numbers, and it survived
+a whole working session before anyone re-read it.
