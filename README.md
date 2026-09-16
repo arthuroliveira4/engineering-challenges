@@ -58,12 +58,21 @@ of my own, no API.
 | | measured |
 |---|---|
 | Cost | **€0.00 per page** — nothing is called |
-| Time | **0.0026 s per page**, 1.1 s for all 415 pages, one core |
+| Time | **0.002–0.006 s per page**, one core — 1 to 2.5 s for all 415 pages |
 | Coverage | **121 of a possible 145 values** across 15 filings |
 
 The 145 is not 12 × 15. Five filings withhold their income statement from
 publication by law, so 35 of the 180 nominal values do not exist to be read —
 see below.
+
+The time is a range and not a figure because that is what five consecutive
+runs of the same code on the same corpus gave: 0.0024, 0.0032, 0.0031, 0.0058
+and 0.0060 seconds per page. The work is reading 415 small JSON files off a
+laptop disk, so the spread is the filesystem and whatever else the machine was
+doing, not the pipeline. `results.json` carries the figure from the run that
+wrote it, which is why it will not match this line exactly; quoting one of
+those runs to two significant figures and calling it *the* number would be
+tidier and less true.
 
 **What it bought.** Everything, at zero marginal cost, is the wrong way to
 read that. What the choice really bought is *auditability*: every figure
