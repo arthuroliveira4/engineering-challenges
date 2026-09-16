@@ -12,9 +12,11 @@ accents, it does not care that one accountant writes "Total des capitaux
 propres" where the form says "TOTAL (I)", and it steps straight past the
 "(Dont verse : ...)" parenthetical that prints a decoy figure mid-row.
 
-It only exists on the nine filings that use the official form. The other six
-in scope are laid out by the accountant's own software and carry no codes at
-all, so callers fall back to wording plus column calibration there.
+It only exists on the eight filings that use the official form. The other
+seven in scope are laid out by the accountant's own software and carry no
+codes at all, so callers fall back to wording plus column calibration there.
+328024377 files both ways across its three years, so the layout is a property
+of the filing and never of the company.
 """
 
 from __future__ import annotations

@@ -206,11 +206,23 @@ is the habit I would take from this challenge.
 These came out of the data and are worth reporting whether or not they were
 intended.
 
-**1. Six of the fifteen filings are not the liasse fiscale.** They are balance
-sheets laid out by the accountant's own software — same French wording, no
-CERFA form number, no line codes. Anchoring on form numbers or page positions
-works on nine filings and fails silently on six, so the pipeline reads by line
-code where one exists and by wording where none does.
+**1. Seven of the fifteen filings are not the liasse fiscale.** They are
+balance sheets laid out by the accountant's own software — same French
+wording, no CERFA form number, no line codes. Three signals agree on which,
+and they agree exactly: the seven print no `DGFiP`, carry no form number, and
+yield zero CERFA codes on the page their balance sheet sits on, while the
+other eight yield between ten and fifteen.
+
+| | filings |
+|---|---|
+| official liasse | `328024377` 2021 · 2022, `504304205` ×3, `401009741` ×3 |
+| accountant's software | `820561470` ×3, `328024377` 2020, `445070311` ×3 |
+
+Anchoring on form numbers or page positions works on eight and fails silently
+on seven, so the pipeline reads by line code where one exists and by wording
+where none does. Note that `328024377` files both ways across three years —
+whichever layout a filing uses is a property of the filing, never of the
+company.
 
 **2. Sideways pages are in three companies, not one.** The brief flags
 `820561470`. In the pages shipped, `445070311` has 9 rotated pages,
@@ -299,28 +311,28 @@ Python in this repository — every module in `pipeline/`, plus `run.py` and
 `verify.py`. I am not going to dress that up: my contribution was direction,
 judgement and criticising the AI's decisions, not authorship of the code.
 
-**What I decided.** To take the bilan challenge; to read the shipped OCR with
-rules rather than send pages to a vision model; and, where
+**What I decided.** To take the bilan challenge, to read the shipped OCR with
+rules rather than send pages to a vision model, and, where
 `financial_fields.json` contradicts itself, to follow `notes` over `label_fr`.
 That last one moves three fields and is argued in `DECISIONS.md`. I also asked
 for an explanation of anything I could not follow, and did not let a step past
 me until I could say why it was there.
 
 **What I checked.** I asked for a way to see the boxes rather than be told they
-were fine, which is where `verify.py` comes from — that, and trying to
+were fine, which is where `verify.py` comes from, that, and trying to
 understand every step and what it implied for the rest of the pipeline. It
-mattered more than anything else I did: reading all fifteen sheets turned up
+mattered more than anything else I did, so reading all fifteen sheets turned up
 nine defects in output that had already passed the schema and the
 reconciliation identities. Six figures that were simply wrong, one filing whose
 four boxes pointed at the wrong part of the page, and two figures dropped from
 pages that state them plainly. Every one was a plausible number produced by
-code that looked correct. They are listed with their causes under *Accuracy*.
+code that looked correct. They are listed with their causes under Accuracy.
 
 **Where it led me wrong.** It reported the reconciliation as passing on 11 of
 15 filings when several of those "matches" were coincidences between number
 fragments. It wrote a check that threw away a correct figure by assuming any
 three-figure row meant gross/depreciation/net. And it left a sentence in
 `results.json` announcing that seven of the twelve fields were not implemented
-while the same file carried their values — a plain contradiction in the one
+while the same file carried their values, a plain contradiction in the one
 field a reader consults to decide whether to trust the numbers, and it survived
 a whole working session before anyone re-read it.
