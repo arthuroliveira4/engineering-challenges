@@ -4,7 +4,7 @@ Extracts twelve financial fields from the fifteen filings in scope, each with
 the page and box it was read from, using the OCR shipped in `data/` and no
 model at all.
 
-**Recording (~3 min):** TODO — paste the Loom link here before opening the PR.
+**Recording (~3 min):** https://www.loom.com/share/ad5621c438684c98b18e7a316c1caeae
 
 The original challenge brief is at
 [`challenges/bilan/BRIEF.md`](challenges/bilan/BRIEF.md); this README replaces
