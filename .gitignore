@@ -1,3 +1,17 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# segredos - nunca commitar
+.env
+.env.local
+
+# ambiente virtual python
+.venv/
+venv/
+
+# saidas intermediarias
+*.png
+
+# saidas de verificacao (geradas por verify.py)
+verify/
